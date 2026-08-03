@@ -1,54 +1,78 @@
 {
   "status": "PASS",
-  "local": {
-    "title": "Worth The Trip? \u2014 Outing & Trip Calculator",
+  "desktop": {
+    "title": "Worth The Trip?",
     "type": "outing",
+    "summary": "I\u2019d plan for about 3 hours.",
     "options": [
       "2 hours",
       "3 hours",
       "4.5 hours",
       "6 hours"
     ],
-    "factors": 6,
-    "score": 85,
-    "destination": "Fremont",
-    "urlVersion": true,
+    "optionalOpen": false,
+    "travelOutput": "20 min",
+    "dashboardPieces": 0,
     "overflow": false,
-    "errorsHidden": true
+    "errorsHidden": true,
+    "urlVersion": true
   },
-  "sensitivity": {
-    "before": 3,
-    "after": 7,
-    "urlHasControls": true
+  "sliderCases": {
+    "tenMin": {
+      "output": "10 min",
+      "amount": "10",
+      "unit": "minutes",
+      "summary": "I\u2019d plan for about 2.5 hours.",
+      "url": "?v=0.3&tripType=outing&destination=Fremont&purpose=leisure&activity=activity&oneWayAmount=10&oneWayUnit=minutes&visitHours=3&excitement=7&importance=3&logistics=normal&coordination=solo&energy=normal&pace=balanced&currency=USD&transportCost=12&stayOrActivityCost=45&extraCosts=10&totalBudget=100"
+    },
+    "tenHour": {
+      "output": "10 hr",
+      "amount": "10",
+      "unit": "hours",
+      "summary": "I\u2019d plan for about 12 hours.",
+      "url": "?v=0.3&tripType=outing&destination=Fremont&purpose=leisure&activity=activity&oneWayAmount=10&oneWayUnit=hours&visitHours=3&excitement=7&importance=3&logistics=normal&coordination=solo&energy=normal&pace=balanced&currency=USD&transportCost=12&stayOrActivityCost=45&extraCosts=10&totalBudget=100"
+    }
+  },
+  "optional": {
+    "open": true,
+    "controlVisible": true,
+    "urlHasOptional": true
+  },
+  "hydration": {
+    "destination": "Foster City \u2192 Hillsborough",
+    "exactAmount": "20",
+    "exactUnit": "minutes",
+    "sliderOutput": "20 min",
+    "visitExact": "1.5",
+    "visitSlider": "1.5",
+    "purpose": "visiting",
+    "summary": "I\u2019d plan for about 1.5 hours."
   },
   "longTrip": {
     "type": "overnight",
-    "destination": "Tokyo",
-    "options": [
-      "8 nights",
-      "9 nights",
-      "11 nights",
-      "13 nights"
-    ],
+    "travelOutput": "10 hr",
     "nightsVisible": true,
     "visitHidden": true,
-    "factors": 6
+    "options": [
+      "7 nights",
+      "8 nights",
+      "10 nights",
+      "12 nights"
+    ],
+    "summary": "I\u2019d plan for about 8 nights."
   },
   "mobile": {
     "destination": "Foster City \u2192 Hillsborough",
-    "options": [
-      "1.25 hours",
-      "1.5 hours",
-      "2.5 hours",
-      "6 hours"
-    ],
+    "summary": "I\u2019d plan for about 1.5 hours.",
     "overflow": false,
-    "factors": 6,
+    "options": 4,
+    "optionalOpen": false,
+    "dashboardPieces": 0,
     "errorsHidden": true
   },
   "invalid": {
     "hidden": false,
-    "score": "\u2014",
+    "summary": "Fix the highlighted numbers first.",
     "options": 0,
     "invalidShared": false
   },

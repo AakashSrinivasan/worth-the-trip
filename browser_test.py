@@ -12,7 +12,7 @@ BASE_URL = os.environ.get("BASE_URL", "http://127.0.0.1:8080").rstrip("/")
 req = urllib.request.Request(f"http://127.0.0.1:{PORT}/json/new?{BASE_URL}/", method="PUT")
 with urllib.request.urlopen(req, timeout=5) as response:
     target = json.load(response)
-ws = websocket.create_connection(target["webSocketDebuggerUrl"], timeout=10, suppress_origin=True)
+ws = websocket.create_connection(target["webSocketDebuggerUrl"], timeout=15, suppress_origin=True)
 next_id = 0
 events = []
 
@@ -35,7 +35,7 @@ def evaluate(expression):
 
 def navigate(url):
     call("Page.navigate", {"url": url})
-    deadline = time.time() + 10
+    deadline = time.time() + 15
     while time.time() < deadline:
         if evaluate("document.readyState") == "complete" and evaluate("document.querySelectorAll('.stay-option').length") == 4:
             return
@@ -52,70 +52,116 @@ call("Log.enable")
 call("Emulation.setDeviceMetricsOverride", {"width": 1440, "height": 1100, "deviceScaleFactor": 1, "mobile": False})
 navigate(f"{BASE_URL}/")
 
-local = evaluate("""(() => ({
+desktop = evaluate("""(() => ({
   title: document.title,
   type: document.querySelector('[name="tripType"]:checked').value,
+  summary: document.querySelector('#result-summary').textContent,
   options: [...document.querySelectorAll('.stay-option strong')].map(x => x.textContent),
-  factors: document.querySelectorAll('.factor').length,
-  score: Number(document.querySelector('#score').textContent),
-  destination: document.querySelector('#destination-label').textContent,
-  urlVersion: location.search.includes('v=0.2'),
+  optionalOpen: document.querySelector('#optional-fields').open,
+  travelOutput: document.querySelector('#travel-time-output').textContent,
+  dashboardPieces: document.querySelectorAll('.score,.score-row,.factor-bar').length,
   overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
-  errorsHidden: document.querySelector('#validation-errors').hidden
+  errorsHidden: document.querySelector('#validation-errors').hidden,
+  urlVersion: location.search.includes('v=0.3')
 }))()""")
-assert local["type"] == "outing"
-assert local["options"] == ["2 hours", "3 hours", "4.5 hours", "6 hours"]
-assert local["factors"] == 6 and 0 <= local["score"] <= 100
-assert local["urlVersion"] and not local["overflow"] and local["errorsHidden"]
+assert desktop["title"] == "Worth The Trip?"
+assert desktop["type"] == "outing" and "3 hours" in desktop["summary"]
+assert desktop["options"] == ["2 hours", "3 hours", "4.5 hours", "6 hours"]
+assert not desktop["optionalOpen"] and desktop["travelOutput"] == "20 min"
+assert desktop["dashboardPieces"] == 0 and not desktop["overflow"] and desktop["errorsHidden"] and desktop["urlVersion"]
 screenshot(ROOT / "desktop-preview.png")
 
-sensitivity = evaluate("""(() => {
-  const before = Number(document.querySelectorAll('.stay-option strong')[1].textContent.split(' ')[0]);
+slider_cases = evaluate("""(() => {
+  const slider=document.querySelector('#travelTimeRange');
+  slider.value='1'; slider.dispatchEvent(new Event('input',{bubbles:true}));
+  const tenMin={
+    output:document.querySelector('#travel-time-output').textContent,
+    amount:document.querySelector('#oneWayAmount').value,
+    unit:document.querySelector('#oneWayUnit').value,
+    summary:document.querySelector('#result-summary').textContent,
+    url:location.search
+  };
+  document.querySelector('[data-travel-minutes="600"]').click();
+  const tenHour={
+    output:document.querySelector('#travel-time-output').textContent,
+    amount:document.querySelector('#oneWayAmount').value,
+    unit:document.querySelector('#oneWayUnit').value,
+    summary:document.querySelector('#result-summary').textContent,
+    url:location.search
+  };
+  return {tenMin,tenHour};
+})()""")
+assert slider_cases["tenMin"]["output"] == "10 min" and slider_cases["tenMin"]["amount"] == "10" and slider_cases["tenMin"]["unit"] == "minutes"
+assert "oneWayAmount=10" in slider_cases["tenMin"]["url"] and "oneWayUnit=minutes" in slider_cases["tenMin"]["url"]
+assert slider_cases["tenHour"]["output"] == "10 hr" and slider_cases["tenHour"]["amount"] == "10" and slider_cases["tenHour"]["unit"] == "hours"
+assert "oneWayAmount=10" in slider_cases["tenHour"]["url"] and "oneWayUnit=hours" in slider_cases["tenHour"]["url"]
+assert slider_cases["tenMin"]["summary"] != slider_cases["tenHour"]["summary"]
+
+optional = evaluate("""(() => {
+  const details=document.querySelector('#optional-fields'); details.querySelector('summary').click();
+  const open=details.open;
+  const controlVisible=!!document.querySelector('#coordination').offsetParent;
   for (const [id,value] of [['logistics','heavy'],['coordination','group'],['energy','low']]) {
     const el=document.querySelector('#'+id); el.value=value; el.dispatchEvent(new Event('input',{bubbles:true}));
   }
-  const after = Number(document.querySelectorAll('.stay-option strong')[1].textContent.split(' ')[0]);
-  return {before, after, urlHasControls: location.search.includes('coordination=group') && location.search.includes('energy=low')};
+  return {open,controlVisible,urlHasOptional:location.search.includes('coordination=group') && location.search.includes('energy=low')};
 })()""")
-assert sensitivity["after"] > sensitivity["before"] and sensitivity["urlHasControls"]
+assert optional == {"open": True, "controlVisible": True, "urlHasOptional": True}
 
-long_trip = evaluate("""(() => {
-  document.querySelector('[data-preset="tokyo"]').click();
-  return {
-    type: document.querySelector('[name="tripType"]:checked').value,
-    destination: document.querySelector('#destination-label').textContent,
-    options: [...document.querySelectorAll('.stay-option strong')].map(x => x.textContent),
-    nightsVisible: !document.querySelector('#nights').closest('label').hidden,
-    visitHidden: document.querySelector('#visitHours').closest('label').hidden,
-    factors: document.querySelectorAll('.factor').length
-  };
-})()""")
-assert long_trip["type"] == "overnight" and long_trip["destination"] == "Tokyo"
-assert len(long_trip["options"]) == 4 and all("nights" in value for value in long_trip["options"])
-assert long_trip["nightsVisible"] and long_trip["visitHidden"] and long_trip["factors"] == 6
+shared_url = f"{BASE_URL}/?v=0.3&tripType=outing&destination=Foster+City+%E2%86%92+Hillsborough&purpose=visiting&activity=meal&oneWayAmount=20&oneWayUnit=minutes&visitHours=1.5&logistics=easy&coordination=pair&energy=normal&currency=USD&transportCost=8&stayOrActivityCost=25&extraCosts=0&totalBudget=60&excitement=8&importance=4&pace=packed"
+navigate(shared_url)
+hydration = evaluate("""(() => ({
+  destination:document.querySelector('#destination-label').textContent,
+  exactAmount:document.querySelector('#oneWayAmount').value,
+  exactUnit:document.querySelector('#oneWayUnit').value,
+  sliderOutput:document.querySelector('#travel-time-output').textContent,
+  visitExact:document.querySelector('#visitHours').value,
+  visitSlider:document.querySelector('#visitHoursRange').value,
+  purpose:document.querySelector('#purpose').value,
+  summary:document.querySelector('#result-summary').textContent
+}))()""")
+assert hydration["destination"] == "Foster City → Hillsborough"
+assert hydration["exactAmount"] == "20" and hydration["exactUnit"] == "minutes" and hydration["sliderOutput"] == "20 min"
+assert hydration["visitExact"] == "1.5" and hydration["visitSlider"] == "1.5" and hydration["purpose"] == "visiting"
+
+long_trip_url = f"{BASE_URL}/?v=0.3&tripType=overnight&destination=Tokyo&purpose=leisure&oneWayAmount=10&oneWayUnit=hours&nights=5&logistics=normal&coordination=pair&energy=normal&currency=USD&transportCost=900&stayOrActivityCost=160&extraCosts=350&totalBudget=2500&ptoDays=5&timezoneDelta=8&excitement=9&importance=3&pace=balanced"
+navigate(long_trip_url)
+long_trip = evaluate("""(() => ({
+  type:document.querySelector('[name="tripType"]:checked').value,
+  travelOutput:document.querySelector('#travel-time-output').textContent,
+  nightsVisible:!document.querySelector('#nights').closest('.overnight-only').hidden,
+  visitHidden:document.querySelector('#visitHours').closest('.outing-only').hidden,
+  options:[...document.querySelectorAll('.stay-option strong')].map(x=>x.textContent),
+  summary:document.querySelector('#result-summary').textContent
+}))()""")
+assert long_trip["type"] == "overnight" and long_trip["travelOutput"] == "10 hr"
+assert long_trip["nightsVisible"] and long_trip["visitHidden"] and len(long_trip["options"]) == 4
+assert all("nights" in value for value in long_trip["options"])
 
 call("Emulation.setDeviceMetricsOverride", {"width": 390, "height": 844, "deviceScaleFactor": 2, "mobile": True})
-navigate(f"{BASE_URL}/?v=0.2&tripType=outing&destination=Foster+City+%E2%86%92+Hillsborough&purpose=visiting&activity=meal&oneWayAmount=20&oneWayUnit=minutes&visitHours=1.5&logistics=easy&coordination=pair&energy=normal&currency=USD&transportCost=8&stayOrActivityCost=25&extraCosts=0&totalBudget=60&excitement=8&importance=4&pace=packed")
+navigate(shared_url)
 mobile = evaluate("""(() => ({
-  destination: document.querySelector('#destination-label').textContent,
-  options: [...document.querySelectorAll('.stay-option strong')].map(x => x.textContent),
-  overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
-  factors: document.querySelectorAll('.factor').length,
-  errorsHidden: document.querySelector('#validation-errors').hidden
+  destination:document.querySelector('#destination-label').textContent,
+  summary:document.querySelector('#result-summary').textContent,
+  overflow:document.documentElement.scrollWidth > document.documentElement.clientWidth,
+  options:document.querySelectorAll('.stay-option').length,
+  optionalOpen:document.querySelector('#optional-fields').open,
+  dashboardPieces:document.querySelectorAll('.score,.score-row,.factor-bar').length,
+  errorsHidden:document.querySelector('#validation-errors').hidden
 }))()""")
-assert mobile["destination"] == "Foster City → Hillsborough"
-assert len(mobile["options"]) == 4 and not mobile["overflow"] and mobile["factors"] == 6 and mobile["errorsHidden"]
+assert mobile["destination"] == "Foster City → Hillsborough" and mobile["options"] == 4
+assert not mobile["overflow"] and not mobile["optionalOpen"] and mobile["dashboardPieces"] == 0 and mobile["errorsHidden"]
 screenshot(ROOT / "mobile-preview.png")
 
 bad = evaluate("""(() => {
   const el=document.querySelector('#visitHours'); el.value='0'; el.dispatchEvent(new Event('input',{bubbles:true}));
-  return {hidden:document.querySelector('#validation-errors').hidden, score:document.querySelector('#score').textContent, options:document.querySelectorAll('.stay-option').length, invalidShared:location.search.includes('visitHours=0')};
+  return {hidden:document.querySelector('#validation-errors').hidden, summary:document.querySelector('#result-summary').textContent, options:document.querySelectorAll('.stay-option').length, invalidShared:location.search.includes('visitHours=0')};
 })()""")
-assert not bad["hidden"] and bad["score"] == "—" and bad["options"] == 0 and not bad["invalidShared"]
+assert not bad["hidden"] and "Fix" in bad["summary"] and bad["options"] == 0 and not bad["invalidShared"]
 errors = [event for event in events if event.get("method") in ("Runtime.exceptionThrown", "Log.entryAdded")]
 assert not errors, errors
-receipt = {"status":"PASS","local":local,"sensitivity":sensitivity,"longTrip":long_trip,"mobile":mobile,"invalid":bad,"consoleErrors":len(errors)}
-(ROOT / "browser-receipt.json").write_text(json.dumps(receipt, indent=2) + "\n")
-print(json.dumps(receipt, indent=2))
+receipt = {"status":"PASS","desktop":desktop,"sliderCases":slider_cases,"optional":optional,"hydration":hydration,"longTrip":long_trip,"mobile":mobile,"invalid":bad,"consoleErrors":len(errors)}
+(ROOT / "browser-receipt.json").write_text(json.dumps(receipt,indent=2)+"\n")
+print(json.dumps(receipt,indent=2))
 call("Target.closeTarget", {"targetId": target["id"]})
 ws.close()

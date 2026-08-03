@@ -1,6 +1,15 @@
 # Worth The Trip? MVP
 
-A static, no-backend calculator for both **local outings/day trips** and **overnight travel**. Heuristic v0.2 returns four scenario-sensitive play modes—Quick, Worthwhile, Comfortable, and Make a Day/Trip of It—rather than applying one fixed travel-time multiplier.
+A static, no-backend calculator for both **local outings/day trips** and **overnight travel**. The current interface is a travel-specific route note: a small set of core questions, sliders with exact inputs, clearly collapsed optional fields, and four practical stay choices. The underlying v0.2 calculation model remains unchanged.
+
+## Interface
+
+- Core screen: trip type, destination, reason, activity, one-way travel time, and proposed stay.
+- Travel and stay controls have both sliders and exact numeric inputs.
+- Six quick travel-time choices cover 10 minutes through 10 hours.
+- Interest, hassle, group size, energy, pace, costs, PTO, and time zone are visibly marked optional and collapsed by default.
+- Results use conversational text rather than a score gauge, weighted bars, or dashboard styling.
+- Every input recalculates immediately and remains shareable in the URL.
 
 ## Inputs that change the recommendation
 

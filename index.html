@@ -3,173 +3,284 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Find out how long to stay—from a 20-minute drive to a long-haul vacation—and compare quick, worthwhile, and relaxed options.">
+  <meta name="description" content="A simple rule-of-thumb calculator for how long a drive, day trip, or vacation should be.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>↗</text></svg>">
-  <title>Worth The Trip? — Outing & Trip Calculator</title>
+  <title>Worth The Trip?</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <main>
   <header class="hero">
-    <div class="eyebrow">Worth The Trip? · transparent heuristic v0.2</div>
-    <h1>How long should<br>you actually stay?</h1>
-    <p>A 20-minute drive should not use the same rule as Tokyo. Switch between a local outing and an overnight trip, then play with purpose, logistics, pace, money, and personal interest.</p>
+    <a class="brand" href="./">Worth The Trip?</a>
+    <h1>How long should I stay?</h1>
+    <p>Put in the travel time and what you’re going for. We’ll give you a practical range—from a quick visit to making a day or trip of it.</p>
   </header>
 
-  <nav class="presets" aria-label="Example scenarios">
-    <button type="button" class="preset" data-preset="fremont">20-min drive</button>
-    <button type="button" class="preset" data-preset="daytrip">2-hour day trip</button>
-    <button type="button" class="preset" data-preset="tokyo">Long-haul trip</button>
-  </nav>
-
   <section class="grid">
-    <form class="card form-grid" id="trip-form">
-      <div id="validation-errors" class="validation-errors full" role="alert" hidden></div>
-      <fieldset class="type-switch full">
-        <legend>What kind of trip?</legend>
-        <label><input type="radio" name="tripType" value="outing" checked> Local outing / day trip</label>
+    <form class="card trip-form" id="trip-form">
+      <div id="validation-errors" class="validation-errors" role="alert" hidden></div>
+
+      <fieldset class="type-switch">
+        <legend>Trip type</legend>
+        <label><input type="radio" name="tripType" value="outing" checked> Same-day trip</label>
         <label><input type="radio" name="tripType" value="overnight"> Overnight trip</label>
       </fieldset>
 
-      <label class="full">Where are you going?
-        <input id="destination" name="destination" value="Fremont" maxlength="80" autocomplete="off">
+      <label>Where are you going?
+        <input id="destination" name="destination" value="Fremont" maxlength="80" autocomplete="off" placeholder="Fremont, Tokyo, a friend’s place…">
       </label>
-      <label>Purpose
-        <select id="purpose" name="purpose">
-          <option value="leisure" selected>Leisure / optional</option>
-          <option value="event">Fixed event</option>
-          <option value="visiting">Visiting people</option>
-        </select>
-      </label>
-      <label class="outing-only">What are you doing?
-        <select id="activity" name="activity">
-          <option value="quick">Quick errand / pickup</option>
-          <option value="meal">Meal or coffee</option>
-          <option value="social">Social visit</option>
-          <option value="activity" selected>Activity or attraction</option>
-          <option value="explore">Explore with no fixed plan</option>
-        </select>
-      </label>
-      <label>One-way travel time
-        <span class="split-input"><input id="oneWayAmount" name="oneWayAmount" type="number" min="0.1" step="0.1" value="20" required><select id="oneWayUnit" name="oneWayUnit"><option value="minutes" selected>minutes</option><option value="hours">hours</option></select></span>
-        <small>Door to door, including ordinary traffic</small>
-      </label>
-      <label class="outing-only">Planned time there (hours)
-        <input id="visitHours" name="visitHours" type="number" min="0.25" max="24" step="0.25" value="3" required>
-      </label>
-      <label class="overnight-only" hidden>Planned stay (nights)
-        <input id="nights" name="nights" type="number" min="1" max="60" step="1" value="5">
-      </label>
-      <label>Travel friction
-        <select id="logistics" name="logistics">
-          <option value="easy">Easy — direct and predictable</option>
-          <option value="normal" selected>Normal — some prep/waiting</option>
-          <option value="heavy">Heavy — traffic/transfers/gear</option>
-        </select>
-      </label>
-      <label>Coordination
-        <select id="coordination" name="coordination"><option value="solo" selected>Solo</option><option value="pair">Two people</option><option value="group">Group / family</option></select>
-      </label>
-      <label>Energy today
-        <select id="energy" name="energy"><option value="high">High — I can pack it in</option><option value="normal" selected>Normal</option><option value="low">Low — I need more margin</option></select>
-      </label>
-      <label>Currency
-        <select id="currency" name="currency"><option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option><option>AUD</option><option>JPY</option><option>INR</option></select>
-      </label>
-      <label>Round-trip transportation
-        <input id="transportCost" name="transportCost" type="number" min="0" step="1" value="12" required>
-        <small class="currency-hint">Amount in USD, per traveler</small>
-      </label>
-      <label><span id="stay-cost-label">Activity / food cost</span>
-        <input id="stayOrActivityCost" name="stayOrActivityCost" type="number" min="0" step="1" value="45" required>
-        <small class="currency-hint">Amount in USD, per traveler</small>
-      </label>
-      <label>Other costs
-        <input id="extraCosts" name="extraCosts" type="number" min="0" step="1" value="10">
-      </label>
-      <label>Maximum budget
-        <input id="totalBudget" name="totalBudget" type="number" min="1" step="1" value="100" required>
-      </label>
-      <label class="overnight-only" hidden>PTO used (days)
-        <input id="ptoDays" name="ptoDays" type="number" min="0" max="60" step="0.5" value="5">
-      </label>
-      <label class="overnight-only" hidden>Time-zone difference (hours)
-        <input id="timezoneDelta" name="timezoneDelta" type="number" min="0" max="18" step="0.5" value="8">
-      </label>
-      <label>Excitement: <output id="excitement-output">7/10</output>
-        <input id="excitement" name="excitement" type="range" min="1" max="10" value="7">
-      </label>
-      <label>Importance
-        <select id="importance" name="importance"><option value="1">1 — whatever</option><option value="2">2 — nice to do</option><option value="3" selected>3 — meaningful</option><option value="4">4 — major occasion</option><option value="5">5 — must do</option></select>
-      </label>
-      <label class="full">Preferred pace
-        <select id="pace" name="pace"><option value="packed">Packed — maximum efficiency</option><option value="balanced" selected>Balanced — normal breathing room</option><option value="relaxed">Relaxed — no rushing</option></select>
-      </label>
-      <button type="submit">Calculate</button>
+
+      <div class="two-up">
+        <label>What’s the reason?
+          <select id="purpose" name="purpose">
+            <option value="leisure" selected>Just for fun</option>
+            <option value="event">A specific event</option>
+            <option value="visiting">Visiting someone</option>
+          </select>
+        </label>
+        <label class="outing-only">What are you doing?
+          <select id="activity" name="activity">
+            <option value="quick">Errand or pickup</option>
+            <option value="meal">Meal or coffee</option>
+            <option value="social">Hanging out</option>
+            <option value="activity" selected>Activity or attraction</option>
+            <option value="explore">Walking around / exploring</option>
+          </select>
+        </label>
+      </div>
+
+      <section class="control-group" aria-labelledby="travel-label">
+        <div class="control-head"><strong id="travel-label">One-way travel time</strong><output id="travel-time-output">20 min</output></div>
+        <input id="travelTimeRange" class="range" type="range" min="0" max="20" step="1" value="3" aria-labelledby="travel-label">
+        <div class="range-ends"><span>5 min</span><span>36 hr</span></div>
+        <div class="exact-row">
+          <span>Exact</span>
+          <input id="oneWayAmount" name="oneWayAmount" type="number" min="0.1" max="2160" step="0.1" value="20" aria-label="Exact one-way travel time">
+          <select id="oneWayUnit" name="oneWayUnit" aria-label="Travel-time unit"><option value="minutes" selected>minutes</option><option value="hours">hours</option></select>
+        </div>
+      </section>
+
+      <div class="quick-times" aria-label="Quick travel-time choices">
+        <span>Quick pick:</span>
+        <button type="button" data-travel-minutes="10">10 min</button>
+        <button type="button" data-travel-minutes="30">30 min</button>
+        <button type="button" data-travel-minutes="60">1 hr</button>
+        <button type="button" data-travel-minutes="120">2 hr</button>
+        <button type="button" data-travel-minutes="360">6 hr</button>
+        <button type="button" data-travel-minutes="600">10 hr</button>
+      </div>
+
+      <section class="control-group outing-only" aria-labelledby="visit-label">
+        <div class="control-head"><strong id="visit-label">How long are you thinking of staying?</strong><output id="visit-output">3 hours</output></div>
+        <input id="visitHoursRange" class="range" type="range" min="0.5" max="16" step="0.5" value="3" aria-labelledby="visit-label">
+        <div class="range-ends"><span>30 min</span><span>16 hr</span></div>
+        <div class="exact-row compact"><span>Exact</span><input id="visitHours" name="visitHours" type="number" min="0.25" max="24" step="0.25" value="3"><span>hours</span></div>
+      </section>
+
+      <section class="control-group overnight-only" hidden aria-labelledby="nights-label">
+        <div class="control-head"><strong id="nights-label">How many nights are you thinking?</strong><output id="nights-output">5 nights</output></div>
+        <input id="nightsRange" class="range" type="range" min="1" max="30" step="1" value="5" aria-labelledby="nights-label">
+        <div class="range-ends"><span>1 night</span><span>30 nights</span></div>
+        <div class="exact-row compact"><span>Exact</span><input id="nights" name="nights" type="number" min="1" max="60" step="1" value="5"><span>nights</span></div>
+      </section>
+
+      <details class="optional" id="optional-fields">
+        <summary><span>Fine-tune the answer <b>Optional</b></span><small>Skip this if you just want a quick estimate.</small></summary>
+        <div class="optional-grid">
+          <label>How excited are you? <output id="excitement-output">7/10</output>
+            <input id="excitement" name="excitement" class="range" type="range" min="1" max="10" value="7">
+          </label>
+          <label>How important is it? <output id="importance-output">3/5</output>
+            <input id="importance" name="importance" class="range" type="range" min="1" max="5" value="3">
+          </label>
+          <label>Travel hassle
+            <select id="logistics" name="logistics"><option value="easy">Easy and direct</option><option value="normal" selected>Pretty normal</option><option value="heavy">Traffic, transfers, gear, etc.</option></select>
+          </label>
+          <label>Who’s going?
+            <select id="coordination" name="coordination"><option value="solo" selected>Just me</option><option value="pair">Two people</option><option value="group">Group or family</option></select>
+          </label>
+          <label>Your energy
+            <select id="energy" name="energy"><option value="high">High</option><option value="normal" selected>Normal</option><option value="low">Low</option></select>
+          </label>
+          <label>Preferred pace
+            <select id="pace" name="pace"><option value="packed">Pack things in</option><option value="balanced" selected>Balanced</option><option value="relaxed">Take it slow</option></select>
+          </label>
+
+          <div class="optional-divider"><strong>Money</strong><span>Optional—leave the defaults if cost isn’t part of the decision.</span></div>
+          <label>Currency
+            <select id="currency" name="currency"><option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option><option>AUD</option><option>JPY</option><option>INR</option></select>
+          </label>
+          <label>Round-trip travel cost
+            <input id="transportCost" name="transportCost" type="number" min="0" step="1" value="12">
+          </label>
+          <label><span id="stay-cost-label">Food / activity cost</span>
+            <input id="stayOrActivityCost" name="stayOrActivityCost" type="number" min="0" step="1" value="45">
+          </label>
+          <label>Other costs
+            <input id="extraCosts" name="extraCosts" type="number" min="0" step="1" value="10">
+          </label>
+          <label>Maximum budget
+            <input id="totalBudget" name="totalBudget" type="number" min="1" step="1" value="100">
+          </label>
+          <label class="overnight-only" hidden>PTO days used
+            <input id="ptoDays" name="ptoDays" type="number" min="0" max="60" step="0.5" value="5">
+          </label>
+          <label class="overnight-only" hidden>Time-zone difference
+            <input id="timezoneDelta" name="timezoneDelta" type="number" min="0" max="18" step="0.5" value="8">
+          </label>
+        </div>
+      </details>
     </form>
 
     <aside class="card result" aria-live="polite">
+      <p class="result-place" id="destination-label">Fremont</p>
+      <h2 id="result-summary">I’d plan for about 3 hours.</h2>
+      <p class="result-copy" id="result-copy">That gives the drive enough payoff without turning it into an all-day commitment.</p>
+      <div class="verdict-pill" id="verdict">Worth the drive</div>
+
       <div class="option-grid" id="stay-options"></div>
-      <div class="score-row">
-        <div class="verdict"><h2 id="verdict">Calculating…</h2><p id="destination-label">Fremont</p></div>
-        <div class="score" id="score-ring" style="--score-angle:0deg" aria-label="Trip fit score"><strong id="score">0</strong><span>/ 100</span></div>
-      </div>
-      <div class="metrics">
-        <div class="metric"><span id="usable-label">Time there</span><strong id="usable-time">—</strong></div>
-        <div class="metric"><span>Total cost</span><strong id="total-cost">—</strong></div>
-        <div class="metric"><span id="cost-unit-label">Cost / hour</span><strong id="cost-per-unit">—</strong></div>
-      </div>
-      <section class="flip"><span>Best lever to change the answer</span><strong id="flip-label">—</strong><p id="flip-action">—</p></section>
-      <h3 class="section-title">Why it got this answer</h3>
-      <div id="breakdown" class="breakdown"></div>
+      <p class="option-help">Tap an option to use it as your planned stay.</p>
+
+      <section class="suggestion">
+        <span>If you want to improve the plan</span>
+        <strong id="flip-label">Time there</strong>
+        <p id="flip-action">The outing already works; 4.5 hours makes it feel unhurried.</p>
+      </section>
+
       <ul class="reasons" id="reasons"></ul>
-      <div class="actions"><button type="button" class="outline" id="share-result">Copy scenario URL</button><span id="share-status" class="status" role="status"></span></div>
-      <details class="method"><summary>What the calculator is actually doing</summary><p id="method-copy"></p></details>
-      <p class="disclaimer">Planning guidance, not scientific truth. The weights are visible and tested with synthetic scenarios, but not yet calibrated from real travelers. Currency selection changes units only.</p>
+
+      <details class="why" id="why-answer">
+        <summary>Why this amount?</summary>
+        <div id="breakdown" class="plain-breakdown"></div>
+        <p id="method-copy"></p>
+      </details>
+
+      <div class="actions"><button type="button" class="outline" id="share-result">Copy this plan</button><span id="share-status" class="status" role="status"></span></div>
+      <p class="disclaimer">This is a rule of thumb, not a promise that every trip will be worth it.</p>
     </aside>
   </section>
 </main>
 <script src="app.js"></script>
 <script>
   const form = document.querySelector('#trip-form');
-  const knownFields = [...form.elements].filter(el => el.name).map(el => el.name);
-  const presets = {
-    fremont: { tripType:'outing', destination:'San Mateo → Fremont', purpose:'leisure', activity:'activity', oneWayAmount:20, oneWayUnit:'minutes', visitHours:3, logistics:'normal', coordination:'solo', energy:'normal', currency:'USD', transportCost:12, stayOrActivityCost:45, extraCosts:10, totalBudget:100, excitement:7, importance:3, pace:'balanced' },
-    daytrip: { tripType:'outing', destination:'Santa Cruz', purpose:'leisure', activity:'explore', oneWayAmount:2, oneWayUnit:'hours', visitHours:6, logistics:'normal', coordination:'pair', energy:'normal', currency:'USD', transportCost:35, stayOrActivityCost:80, extraCosts:25, totalBudget:180, excitement:8, importance:3, pace:'relaxed' },
-    tokyo: { tripType:'overnight', destination:'Tokyo', purpose:'leisure', oneWayAmount:11, oneWayUnit:'hours', nights:5, logistics:'normal', coordination:'pair', energy:'normal', currency:'USD', transportCost:900, stayOrActivityCost:160, extraCosts:350, totalBudget:2500, ptoDays:5, timezoneDelta:8, excitement:9, importance:3, pace:'balanced' }
-  };
-  function rawValues() { return Object.fromEntries(new FormData(form).entries()); }
-  function hydrate() { const p=new URLSearchParams(location.search); knownFields.forEach(n=>{ if(p.has(n)&&form.elements[n]) { if(form.elements[n] instanceof RadioNodeList) form.elements[n].value=p.get(n); else form.elements[n].value=p.get(n); }}); }
-  function money(v,c){ return new Intl.NumberFormat('en-US',{style:'currency',currency:c,maximumFractionDigits:0}).format(v); }
-  function setText(s,t){ document.querySelector(s).textContent=t; }
-  function updateMode(type){
-    document.querySelectorAll('.outing-only').forEach(el=>el.hidden=type!=='outing');
-    document.querySelectorAll('.overnight-only').forEach(el=>el.hidden=type!=='overnight');
-    document.querySelector('#visitHours').disabled=type!=='outing';
-    document.querySelector('#activity').disabled=type!=='outing';
+  const TRAVEL_STOPS = [5,10,15,20,30,45,60,90,120,180,240,300,360,480,600,720,900,1080,1440,1800,2160];
+  const namedFields = [...form.elements].filter(el => el.name).map(el => el.name);
+  const q = selector => document.querySelector(selector);
+  const setText = (selector, text) => { q(selector).textContent = text; };
 
-    document.querySelector('#nights').disabled=type!=='overnight';
-    document.querySelector('#ptoDays').disabled=type!=='overnight';
-    document.querySelector('#timezoneDelta').disabled=type!=='overnight';
-    setText('#stay-cost-label',type==='outing'?'Activity / food cost':'Cost per night');
+  function formatMinutes(minutes) {
+    if (minutes < 60) return `${minutes} min`;
+    const hours = minutes / 60;
+    return `${Number.isInteger(hours) ? hours : hours.toFixed(1)} hr`;
   }
-  function updateUrl(raw){const p=new URLSearchParams();p.set('v','0.2');Object.entries(raw).forEach(([k,v])=>p.set(k,v));history.replaceState(null,'',`${location.pathname}?${p}`);}
-  function render(){
-    const raw=rawValues(); updateMode(raw.tripType); const r=TripWorth.calculateTripWorth(raw);
-    const errors=document.querySelector('#validation-errors'); errors.hidden=r.valid; errors.textContent=r.valid?'':`Check these inputs: ${r.validationErrors.join(' ')}`;
-    if(!r.valid){ setText('#verdict','Fix inputs to calculate');setText('#score','—');document.querySelector('#stay-options').replaceChildren();document.querySelector('#breakdown').replaceChildren();document.querySelector('#reasons').replaceChildren();document.querySelector('#share-result').disabled=true;return; }
-    document.querySelector('#share-result').disabled=false; updateUrl(raw); setText('#verdict',r.verdict);setText('#destination-label',r.destination);setText('#score',r.score);setText('#excitement-output',`${r.excitement}/10`);
-    document.querySelector('#score-ring').style.setProperty('--score-angle',`${r.score*3.6}deg`);
-    const unit=r.stayUnit; document.querySelector('#stay-options').replaceChildren(...r.stayOptions.map((o,i)=>{const d=document.createElement('button');d.type='button';d.className=`stay-option ${i===1?'featured':''}`;d.innerHTML=`<span>${o.label}</span><strong>${o.duration} ${unit}</strong><small>${o.note}</small>`;d.addEventListener('click',()=>{const field=r.tripType==='outing'?form.elements.visitHours:form.elements.nights;field.value=o.duration;field.dispatchEvent(new Event('input',{bubbles:true}));});return d;}));
-    setText('#usable-label',r.tripType==='outing'?'Planned time there':'Usable days');setText('#usable-time',r.tripType==='outing'?`${r.usableHours.toFixed(1)} hours`:r.usableDays.toFixed(1));setText('#total-cost',money(r.totalCost,r.currency));setText('#cost-unit-label',r.tripType==='outing'?'Cost / hour':'Cost / usable day');setText('#cost-per-unit',money(r.tripType==='outing'?r.costPerUsableHour:r.costPerUsableDay,r.currency));setText('#flip-label',r.flipVariable.label);setText('#flip-action',r.flipVariable.action);
-    document.querySelector('#breakdown').replaceChildren(...r.breakdown.map(x=>{const d=document.createElement('div');d.className='factor';d.innerHTML=`<div class="factor-head"><strong>${x.label} · ${Math.round(x.weight*100)}%</strong><span>${Math.round(x.value)}/100</span></div><div class="factor-bar"><span style="width:${x.value}%"></span></div><small>${x.explanation}</small>`;return d;}));
-    document.querySelector('#reasons').replaceChildren(...r.reasons.map(x=>{const li=document.createElement('li');li.textContent=x;return li;}));
-    setText('#method-copy',r.tripType==='outing'?'For local outings, the minimum depends on round-trip travel, activity type, logistics overhead, pace, importance, and excitement. A quick errand, a meal, and an open-ended exploration deliberately have different payoff targets.':'For overnight trips, the minimum depends on round-trip travel, pace, importance, excitement, purpose, and time-zone recovery. Cost and PTO affect fit rather than pretending to change physical travel friction.');
+  function currentTravelMinutes() {
+    const amount = Number(q('#oneWayAmount').value);
+    return q('#oneWayUnit').value === 'minutes' ? amount : amount * 60;
   }
+  function nearestTravelIndex(minutes) {
+    return TRAVEL_STOPS.reduce((best, value, index) => Math.abs(value - minutes) < Math.abs(TRAVEL_STOPS[best] - minutes) ? index : best, 0);
+  }
+  function syncTravelFromRange() {
+    const minutes = TRAVEL_STOPS[Number(q('#travelTimeRange').value)];
+    if (minutes < 60) { q('#oneWayAmount').value = minutes; q('#oneWayUnit').value = 'minutes'; }
+    else { q('#oneWayAmount').value = minutes / 60; q('#oneWayUnit').value = 'hours'; }
+  }
+  function syncRangeFromTravel() { q('#travelTimeRange').value = nearestTravelIndex(currentTravelMinutes()); }
+  function syncStayRanges(source) {
+    if (source !== 'visitRange') q('#visitHoursRange').value = Math.min(16, Math.max(.5, Number(q('#visitHours').value) || 3));
+    if (source !== 'visitExact') q('#visitHours').value = q('#visitHoursRange').value;
+    if (source !== 'nightsRange') q('#nightsRange').value = Math.min(30, Math.max(1, Number(q('#nights').value) || 5));
+    if (source !== 'nightsExact') q('#nights').value = q('#nightsRange').value;
+  }
+  function updateControlLabels() {
+    setText('#travel-time-output', formatMinutes(currentTravelMinutes()));
+    setText('#visit-output', `${Number(q('#visitHours').value)} hours`);
+    setText('#nights-output', `${Number(q('#nights').value)} nights`);
+    setText('#excitement-output', `${q('#excitement').value}/10`);
+    setText('#importance-output', `${q('#importance').value}/5`);
+  }
+  function hydrate() {
+    const params = new URLSearchParams(location.search);
+    namedFields.forEach(name => { if (params.has(name) && form.elements[name]) form.elements[name].value = params.get(name); });
+    syncRangeFromTravel(); syncStayRanges('hydrate');
+  }
+  function updateMode(type) {
+    document.querySelectorAll('.outing-only').forEach(el => el.hidden = type !== 'outing');
+    document.querySelectorAll('.overnight-only').forEach(el => el.hidden = type !== 'overnight');
+    q('#visitHours').disabled = type !== 'outing'; q('#activity').disabled = type !== 'outing';
+    q('#nights').disabled = type !== 'overnight'; q('#ptoDays').disabled = type !== 'overnight'; q('#timezoneDelta').disabled = type !== 'overnight';
+    setText('#stay-cost-label', type === 'outing' ? 'Food / activity cost' : 'Cost per night');
+  }
+  function rawValues() { return Object.fromEntries(new FormData(form).entries()); }
+  function updateUrl(raw) { const params = new URLSearchParams(); params.set('v','0.3'); Object.entries(raw).forEach(([k,v]) => params.set(k,v)); history.replaceState(null,'',`${location.pathname}?${params}`); }
+  function money(value, currency) { return new Intl.NumberFormat('en-US',{style:'currency',currency,maximumFractionDigits:0}).format(value); }
+
+  function render() {
+    const raw = rawValues(); updateMode(raw.tripType); updateControlLabels();
+    const r = TripWorth.calculateTripWorth(raw);
+    const errors = q('#validation-errors'); errors.hidden = r.valid; errors.textContent = r.valid ? '' : `Check these: ${r.validationErrors.join(' ')}`;
+    if (!r.valid) {
+      setText('#result-summary','Fix the highlighted numbers first.'); setText('#result-copy','Then the recommendation will update automatically.');
+      q('#stay-options').replaceChildren(); q('#breakdown').replaceChildren(); q('#reasons').replaceChildren(); q('#share-result').disabled = true; return;
+    }
+    q('#share-result').disabled = false; updateUrl(raw);
+    const recommended = r.stayOptions[1];
+    const roundTrip = r.roundTripHours < 1 ? `${Math.round(r.roundTripHours * 60)} minutes` : `${r.roundTripHours.toFixed(r.roundTripHours % 1 ? 1 : 0)} hours`;
+    setText('#destination-label', r.destination);
+    setText('#result-summary', `I’d plan for about ${recommended.duration} ${r.stayUnit}.`);
+    setText('#result-copy', r.tripType === 'outing'
+      ? `That’s a sensible amount of time there for ${roundTrip} of round-trip travel.`
+      : `That gives ${roundTrip} of round-trip travel enough payoff without cramming the stay.`);
+    setText('#verdict', r.verdict);
+    const friendlyLever = r.flipVariable.key === 'cost' ? 'Bring the cost down'
+      : r.flipVariable.key === 'logistics' ? 'Make the travel easier'
+      : r.flipVariable.key === 'hours' || r.flipVariable.key === 'nights' ? 'Stay a little longer'
+      : r.flipVariable.label;
+    setText('#flip-label', friendlyLever); setText('#flip-action', r.flipVariable.action);
+    q('#stay-options').replaceChildren(...r.stayOptions.map((option,index) => {
+      const button = document.createElement('button'); button.type='button'; button.className=`stay-option ${index===1?'featured':''}`;
+      const friendly = ['Quick','Good amount','Comfortable',r.tripType==='outing'?'Full day':'Longer trip'][index];
+      const descriptions = r.tripType === 'outing'
+        ? ['If you’re going for one thing.','The sensible middle.','Enough room not to rush.','Add food or another stop.']
+        : ['A compressed version.','The sensible middle.','Enough room to recover.','Room for a side trip.'];
+      button.innerHTML = `<span>${friendly}</span><strong>${option.duration} ${r.stayUnit}</strong><small>${descriptions[index]}</small>`;
+      button.addEventListener('click', () => {
+        if (r.tripType === 'outing') { q('#visitHours').value=option.duration; syncStayRanges('visitExact'); }
+        else { q('#nights').value=option.duration; syncStayRanges('nightsExact'); }
+        render();
+      });
+      return button;
+    }));
+    const friendlyReasons = [];
+    const planned = r.tripType === 'outing' ? r.visitHours : r.nights;
+    if (planned < r.minimumStay) friendlyReasons.push(r.tripType === 'outing' ? 'Right now, you’d spend too much of the outing getting there and back.' : 'Right now, the travel takes up too much of the trip.');
+    if (r.totalCost > r.totalBudget) friendlyReasons.push('This is over the budget you entered.');
+    if (r.logistics === 'heavy') friendlyReasons.push('Traffic, transfers, parking, or gear make this one more work than usual.');
+    if (!friendlyReasons.length) friendlyReasons.push(r.tripType === 'outing' ? 'The time there is long enough to justify the travel.' : 'The stay is long enough to justify the travel.');
+    q('#reasons').replaceChildren(...friendlyReasons.map(reason => { const li=document.createElement('li'); li.textContent=reason; return li; }));
+    q('#breakdown').replaceChildren(...r.breakdown.map(item => { const p=document.createElement('p'); p.textContent=item.explanation; return p; }));
+    setText('#method-copy', r.tripType === 'outing'
+      ? 'The estimate compares your time there with the round-trip drive, what you’re doing, and any extra hassle you added.'
+      : 'The estimate compares your usable days with the round-trip travel, recovery time, and any extra hassle you added.');
+  }
+
   hydrate(); updateMode(rawValues().tripType);
-  form.addEventListener('submit',e=>{e.preventDefault();render();}); form.addEventListener('input',render);
-  document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{const p=presets[b.dataset.preset];Object.entries(p).forEach(([k,v])=>{if(form.elements[k]) form.elements[k].value=v;});updateMode(p.tripType);render();}));
-  document.querySelector('#share-result').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(location.href);setText('#share-status','Copied.');}catch(_){setText('#share-status','URL ready in address bar.');}});
+  q('#travelTimeRange').addEventListener('input', () => { syncTravelFromRange(); render(); });
+  q('#oneWayAmount').addEventListener('input', () => { syncRangeFromTravel(); render(); });
+  q('#oneWayUnit').addEventListener('input', () => { syncRangeFromTravel(); render(); });
+  q('#visitHoursRange').addEventListener('input', () => { syncStayRanges('visitRange'); render(); });
+  q('#visitHours').addEventListener('input', () => { syncStayRanges('visitExact'); render(); });
+  q('#nightsRange').addEventListener('input', () => { syncStayRanges('nightsRange'); render(); });
+  q('#nights').addEventListener('input', () => { syncStayRanges('nightsExact'); render(); });
+  document.querySelectorAll('[data-travel-minutes]').forEach(button => button.addEventListener('click', () => {
+    const minutes=Number(button.dataset.travelMinutes); q('#travelTimeRange').value=nearestTravelIndex(minutes); syncTravelFromRange(); render();
+  }));
+  form.addEventListener('input', event => {
+    if (['travelTimeRange','oneWayAmount','oneWayUnit','visitHoursRange','visitHours','nightsRange','nights'].includes(event.target.id)) return;
+    render();
+  });
+  form.addEventListener('submit', event => event.preventDefault());
+  q('#share-result').addEventListener('click', async () => { try { await navigator.clipboard.writeText(location.href); setText('#share-status','Copied.'); } catch (_) { setText('#share-status','Link is in the address bar.'); } });
   render();
 </script>
 </body>
