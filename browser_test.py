@@ -61,17 +61,19 @@ desktop = evaluate("""(() => ({
   travelOutput: document.querySelector('#travel-time-output').textContent,
   travelAria: document.querySelector('#travelTimeRange').getAttribute('aria-valuetext'),
   quickButtons: document.querySelectorAll('[data-travel-minutes]').length,
-  dashboardPieces: document.querySelectorAll('.score,.score-row,.factor-bar').length,
+  methodologyPresent: document.querySelectorAll('.methodology,.factor-list').length === 2,
+  sliders: document.querySelectorAll('input[type="range"]').length,
   overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
   errorsHidden: document.querySelector('#validation-errors').hidden,
-  urlVersion: location.search.includes('v=0.3')
+  urlVersion: location.search.includes('v=0.4')
 }))()""")
 assert desktop["title"] == "Worth The Trip?"
 assert desktop["type"] == "outing" and "3 hours" in desktop["summary"]
 assert desktop["options"] == ["2 hours", "3 hours", "4.5 hours", "6 hours"]
 assert not desktop["optionalOpen"] and desktop["travelOutput"] == "20 min" and desktop["travelAria"] == "20 min"
 assert desktop["quickButtons"] == 0
-assert desktop["dashboardPieces"] == 0 and not desktop["overflow"] and desktop["errorsHidden"] and desktop["urlVersion"]
+assert desktop["methodologyPresent"] and desktop["sliders"] >= 9
+assert not desktop["overflow"] and desktop["errorsHidden"] and desktop["urlVersion"]
 screenshot(ROOT / "desktop-preview.png")
 
 slider_cases = evaluate("""(() => {
@@ -103,7 +105,7 @@ assert slider_cases["tenMin"]["summary"] != slider_cases["tenHour"]["summary"]
 optional = evaluate("""(() => {
   const details=document.querySelector('#optional-fields'); details.querySelector('summary').click();
   const open=details.open;
-  const controlVisible=!!document.querySelector('#coordination').offsetParent;
+  const controlVisible=!!document.querySelector('#coordinationSlider').offsetParent;
   for (const [id,value] of [['logistics','heavy'],['coordination','group'],['energy','low']]) {
     const el=document.querySelector('#'+id); el.value=value; el.dispatchEvent(new Event('input',{bubbles:true}));
   }
@@ -120,10 +122,10 @@ hydration = evaluate("""(() => ({
   sliderOutput:document.querySelector('#travel-time-output').textContent,
   visitExact:document.querySelector('#visitHours').value,
   visitSlider:document.querySelector('#visitHoursRange').value,
-  purpose:document.querySelector('#purpose').value,
+  purpose:document.querySelector('[name="purpose"]:checked').value,
   summary:document.querySelector('#result-summary').textContent
 }))()""")
-assert hydration["destination"] == "Foster City → Hillsborough"
+assert hydration["destination"] == "FOSTER CITY → HILLSBOROUGH"
 assert hydration["exactAmount"] == "20" and hydration["exactUnit"] == "minutes" and hydration["sliderOutput"] == "20 min"
 assert hydration["visitExact"] == "1.5" and hydration["visitSlider"] == "1.5" and hydration["purpose"] == "visiting"
 
@@ -152,7 +154,7 @@ mobile = evaluate("""(() => ({
   dashboardPieces:document.querySelectorAll('.score,.score-row,.factor-bar').length,
   errorsHidden:document.querySelector('#validation-errors').hidden
 }))()""")
-assert mobile["destination"] == "Foster City → Hillsborough" and mobile["options"] == 4
+assert mobile["destination"] == "FOSTER CITY → HILLSBOROUGH" and mobile["options"] == 4
 assert not mobile["overflow"] and not mobile["optionalOpen"] and mobile["dashboardPieces"] == 0 and mobile["errorsHidden"]
 screenshot(ROOT / "mobile-preview.png")
 
