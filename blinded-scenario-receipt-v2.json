@@ -1,0 +1,994 @@
+{
+  "receiptType": "independent-blinded-scenario-evaluation-v2",
+  "schemaVersion": 2,
+  "evaluatedAt": "2026-08-02T23:03:41.710Z",
+  "implementation": {
+    "appJs": {
+      "file": "app.js",
+      "sha256": "a5282d2eb29cbf62b920e3f50eaa8f754cbc03b64a7a9f1de558559cbf76a131"
+    },
+    "indexHtml": {
+      "file": "index.html",
+      "sha256": "8bc561abf8be4caaff1ce06b21db1889101db243a8ab57ba399de54fabc83447"
+    },
+    "version": "heuristic v0.1",
+    "entryPoint": "calculateTripWorth"
+  },
+  "protocolSources": {
+    "requestedPreregistration": {
+      "file": "/tmp/trip-worth-blinded-preregistration.json",
+      "available": false
+    },
+    "preservedFallback": {
+      "file": "blinded-scenario-receipt.json",
+      "sha256": "2c0f978723cc1e929690e368e8243839f26ddc3f6cf12837a43612a3b1ab4321",
+      "note": "Requested /tmp preregistration was absent; same ten inputs and verbatim preregistered expectations were recovered from the prior receipt without alteration."
+    }
+  },
+  "evidenceScope": "Synthetic pass establishes tested only, never real-user-proven.",
+  "globalInvariants": {
+    "validScenarioScoresFiniteAndBounded": true,
+    "invalidScenarioScoresAreNull": true,
+    "comfortableGteMinimumForValidScenarios": true,
+    "invalidStayRecommendationsAreNull": true,
+    "sixFiniteBoundedExplainedFactorsForValidScenarios": true,
+    "invalidBreakdownsAreEmpty": true,
+    "factorWeightsSumToOneForValidScenarios": true,
+    "longerStayPairDirectionallyRational": true,
+    "purposeControlDirectionallyRational": true,
+    "calculationFailsClosedForAllInvalidScenarios": true,
+    "browserFailsClosedAfterValidToInvalidTransition": true,
+    "browserFailsClosedOnFreshInvalidUrl": true,
+    "browserInvalidActionsDisabled": true,
+    "allPass": true,
+    "legacyWordingDisposition": "Prior normal-output invariants said “all ten” while also requiring invalid cases to have no normal score. They are applied to eight valid scenarios; S09/S10 instead pass the stronger null/empty fail-closed contract."
+  },
+  "supplementalPurposeControl": {
+    "inputHeldConstant": {
+      "oneWayHours": 6,
+      "nights": 4,
+      "transportCost": 500,
+      "nightlyCost": 100,
+      "extraCosts": 100,
+      "totalBudget": 1200,
+      "currency": "USD",
+      "ptoDays": 2,
+      "timezoneDelta": 3,
+      "excitement": 7,
+      "importance": 4,
+      "pace": "balanced"
+    },
+    "results": [
+      {
+        "purpose": "leisure",
+        "score": 75,
+        "minimumViableNights": 4,
+        "tripImportanceFactor": 73
+      },
+      {
+        "purpose": "visiting",
+        "score": 76,
+        "minimumViableNights": 4,
+        "tripImportanceFactor": 77
+      },
+      {
+        "purpose": "event",
+        "score": 78,
+        "minimumViableNights": 4,
+        "tripImportanceFactor": 81
+      }
+    ],
+    "verdict": "PASS"
+  },
+  "browserInvalidRenderPath": {
+    "method": "Live Google Chrome 151.0.7922.71 CDP probe over local HTTP",
+    "currentIndexHtmlLines": "160-228",
+    "transitionFromValidToNightsMinus2": {
+      "validationVisible": true,
+      "verdict": "Fix inputs to calculate",
+      "score": "—",
+      "scoreAngle": "0deg",
+      "scoreAriaLabel": "No trip fit score until inputs are valid",
+      "allComputedDetails": "—",
+      "factorCount": 0,
+      "reasonsCount": 0,
+      "shareDisabled": true,
+      "feedbackDisabled": true,
+      "urlRetainedLastValidState": true
+    },
+    "freshInvalidUrl": {
+      "validationVisible": true,
+      "verdict": "Fix inputs to calculate",
+      "score": "—",
+      "scoreAngle": "0deg",
+      "allComputedDetails": "—",
+      "factorCount": 0,
+      "reasonsCount": 0,
+      "shareDisabled": true,
+      "feedbackDisabled": true
+    },
+    "consoleErrors": 0,
+    "verdict": "PASS"
+  },
+  "scenarios": [
+    {
+      "id": "S01",
+      "label": "nearby leisure, zero PTO",
+      "input": {
+        "destination": "Nearby cabin",
+        "purpose": "leisure",
+        "oneWayHours": 1,
+        "nights": 2,
+        "transportCost": 50,
+        "nightlyCost": 100,
+        "extraCosts": 50,
+        "totalBudget": 500,
+        "currency": "USD",
+        "ptoDays": 0,
+        "timezoneDelta": 0,
+        "excitement": 7,
+        "importance": 3,
+        "pace": "balanced"
+      },
+      "preregisteredExpectation": "A plausible positive short break: mid-to-good score, no PTO penalty, modest travel burden; accepted with six factors.",
+      "actual": {
+        "valid": true,
+        "validationErrors": [],
+        "score": 81,
+        "verdict": "Strong yes",
+        "minimumViableNights": 1,
+        "comfortableNights": 2,
+        "usableDays": 1.8333333333333333,
+        "totalCost": 300,
+        "budgetFit": 100,
+        "stayFit": 1,
+        "breakdownCount": 6,
+        "factorWeightSum": 1,
+        "factors": [
+          {
+            "key": "travelFriction",
+            "value": 91.66666666666666,
+            "weight": 0.2,
+            "explanation": "2.0 hours round trip versus 1.8 usable days."
+          },
+          {
+            "key": "usableDayRatio",
+            "value": 91.66666666666666,
+            "weight": 0.15,
+            "explanation": "92% of planned nights remain usable after transit and recovery."
+          },
+          {
+            "key": "costPerDay",
+            "value": 100,
+            "weight": 0.2,
+            "explanation": "164 USD per usable day against your stated budget."
+          },
+          {
+            "key": "ptoBurden",
+            "value": 100,
+            "weight": 0.15,
+            "explanation": "No PTO required."
+          },
+          {
+            "key": "recovery",
+            "value": 100,
+            "weight": 0.15,
+            "explanation": "0 hours of time-zone change; about 0.0 recovery days."
+          },
+          {
+            "key": "tripImportance",
+            "value": 67,
+            "weight": 0.15,
+            "explanation": "Leisure purpose, importance 3/5, excitement 7/10."
+          }
+        ],
+        "reasons": [
+          "The stay reasonably covers the time, cost, PTO, and recovery burden."
+        ],
+        "flipVariable": {
+          "key": "tripImportance",
+          "label": "Trip importance",
+          "action": "Trip importance is the main remaining drag; the trip already clears the stay-length threshold."
+        },
+        "currency": "USD"
+      },
+      "invariants": {
+        "finiteBoundedScore": true,
+        "comfortableGteMinimum": true,
+        "sixFactorBreakdown": true,
+        "factorWeightsSumToOne": true,
+        "invalidOutputFailsClosed": null,
+        "expectationSpecificCriteria": true
+      },
+      "scenarioVerdict": "PASS",
+      "reason": "Plausibly strong nearby no-PTO break."
+    },
+    {
+      "id": "S02",
+      "label": "long-haul high-importance leisure",
+      "input": {
+        "destination": "Long-haul holiday",
+        "purpose": "leisure",
+        "oneWayHours": 11,
+        "nights": 7,
+        "transportCost": 1000,
+        "nightlyCost": 150,
+        "extraCosts": 450,
+        "totalBudget": 3000,
+        "currency": "USD",
+        "ptoDays": 5,
+        "timezoneDelta": 8,
+        "excitement": 9,
+        "importance": 5,
+        "pace": "balanced"
+      },
+      "preregisteredExpectation": "Worthwhile but not perfect: high importance and a full week should offset some long-haul, cost, and PTO burden.",
+      "actual": {
+        "valid": true,
+        "validationErrors": [],
+        "score": 72,
+        "verdict": "Probably worth it",
+        "minimumViableNights": 7,
+        "comfortableNights": 9,
+        "usableDays": 3.966666666666667,
+        "totalCost": 2500,
+        "budgetFit": 100,
+        "stayFit": 1,
+        "breakdownCount": 6,
+        "factorWeightSum": 1,
+        "factors": [
+          {
+            "key": "travelFriction",
+            "value": 68.39080459770116,
+            "weight": 0.2,
+            "explanation": "22.0 hours round trip versus 4.0 usable days."
+          },
+          {
+            "key": "usableDayRatio",
+            "value": 56.666666666666664,
+            "weight": 0.15,
+            "explanation": "57% of planned nights remain usable after transit and recovery."
+          },
+          {
+            "key": "costPerDay",
+            "value": 68,
+            "weight": 0.2,
+            "explanation": "630 USD per usable day against your stated budget."
+          },
+          {
+            "key": "ptoBurden",
+            "value": 79.33333333333333,
+            "weight": 0.15,
+            "explanation": "5 PTO days for 4.0 usable days."
+          },
+          {
+            "key": "recovery",
+            "value": 78.4,
+            "weight": 0.15,
+            "explanation": "8 hours of time-zone change; about 1.2 recovery days."
+          },
+          {
+            "key": "tripImportance",
+            "value": 93,
+            "weight": 0.15,
+            "explanation": "Leisure purpose, importance 5/5, excitement 9/10."
+          }
+        ],
+        "reasons": [
+          "The time-zone change materially reduces the first usable days."
+        ],
+        "flipVariable": {
+          "key": "nights",
+          "label": "Stay length",
+          "action": "Add 2 nights to move from viable to comfortable."
+        },
+        "currency": "USD"
+      },
+      "invariants": {
+        "finiteBoundedScore": true,
+        "comfortableGteMinimum": true,
+        "sixFactorBreakdown": true,
+        "factorWeightsSumToOne": true,
+        "invalidOutputFailsClosed": null,
+        "expectationSpecificCriteria": true
+      },
+      "scenarioVerdict": "PASS",
+      "reason": "Worthwhile but non-top-tier long-haul result."
+    },
+    {
+      "id": "S03",
+      "label": "nearby high-importance event, zero PTO, over budget",
+      "input": {
+        "destination": "Nearby championship",
+        "purpose": "event",
+        "oneWayHours": 1.5,
+        "nights": 1,
+        "transportCost": 200,
+        "nightlyCost": 150,
+        "extraCosts": 100,
+        "totalBudget": 300,
+        "currency": "USD",
+        "ptoDays": 0,
+        "timezoneDelta": 0,
+        "excitement": 9,
+        "importance": 5,
+        "pace": "packed"
+      },
+      "preregisteredExpectation": "Over-budget should visibly hurt, but a high-importance one-off nearby event can remain rational; not an unqualified top verdict.",
+      "actual": {
+        "valid": true,
+        "validationErrors": [],
+        "score": 81,
+        "verdict": "Worth it for the occasion",
+        "minimumViableNights": 1,
+        "comfortableNights": 2,
+        "usableDays": 0.75,
+        "totalCost": 450,
+        "budgetFit": 50,
+        "stayFit": 1,
+        "breakdownCount": 6,
+        "factorWeightSum": 1,
+        "factors": [
+          {
+            "key": "travelFriction",
+            "value": 75,
+            "weight": 0.2,
+            "explanation": "3.0 hours round trip versus 0.8 usable days."
+          },
+          {
+            "key": "usableDayRatio",
+            "value": 75,
+            "weight": 0.15,
+            "explanation": "75% of planned nights remain usable after transit and recovery."
+          },
+          {
+            "key": "costPerDay",
+            "value": 50,
+            "weight": 0.2,
+            "explanation": "600 USD per usable day against your stated budget."
+          },
+          {
+            "key": "ptoBurden",
+            "value": 100,
+            "weight": 0.15,
+            "explanation": "No PTO required."
+          },
+          {
+            "key": "recovery",
+            "value": 100,
+            "weight": 0.15,
+            "explanation": "0 hours of time-zone change; about 0.0 recovery days."
+          },
+          {
+            "key": "tripImportance",
+            "value": 100,
+            "weight": 0.15,
+            "explanation": "Event purpose, importance 5/5, excitement 9/10."
+          }
+        ],
+        "reasons": [
+          "Cut about 150 USD to fit your stated budget.",
+          "A fixed, important event can rationally override an otherwise marginal efficiency score."
+        ],
+        "flipVariable": {
+          "key": "cost",
+          "label": "Total cost",
+          "action": "Cut 150 USD to get back within budget."
+        },
+        "currency": "USD"
+      },
+      "invariants": {
+        "finiteBoundedScore": true,
+        "comfortableGteMinimum": true,
+        "sixFactorBreakdown": true,
+        "factorWeightsSumToOne": true,
+        "invalidOutputFailsClosed": null,
+        "expectationSpecificCriteria": true
+      },
+      "scenarioVerdict": "PASS",
+      "reason": "Budget overrun remains visible and event verdict is qualified."
+    },
+    {
+      "id": "S04",
+      "label": "medium-distance high-importance visiting",
+      "input": {
+        "destination": "Visit close friends",
+        "purpose": "visiting",
+        "oneWayHours": 4,
+        "nights": 4,
+        "transportCost": 300,
+        "nightlyCost": 100,
+        "extraCosts": 100,
+        "totalBudget": 1000,
+        "currency": "USD",
+        "ptoDays": 2,
+        "timezoneDelta": 3,
+        "excitement": 8,
+        "importance": 5,
+        "pace": "balanced"
+      },
+      "preregisteredExpectation": "Solidly worthwhile visiting trip: high importance and adequate stay, with moderate cost, PTO, and travel deductions.",
+      "actual": {
+        "valid": true,
+        "validationErrors": [],
+        "score": 88,
+        "verdict": "Strong yes",
+        "minimumViableNights": 3,
+        "comfortableNights": 4,
+        "usableDays": 3.1333333333333333,
+        "totalCost": 800,
+        "budgetFit": 100,
+        "stayFit": 1,
+        "breakdownCount": 6,
+        "factorWeightSum": 1,
+        "factors": [
+          {
+            "key": "travelFriction",
+            "value": 82.45614035087719,
+            "weight": 0.2,
+            "explanation": "8.0 hours round trip versus 3.1 usable days."
+          },
+          {
+            "key": "usableDayRatio",
+            "value": 78.33333333333333,
+            "weight": 0.15,
+            "explanation": "78% of planned nights remain usable after transit and recovery."
+          },
+          {
+            "key": "costPerDay",
+            "value": 97.91666666666666,
+            "weight": 0.2,
+            "explanation": "255 USD per usable day against your stated budget."
+          },
+          {
+            "key": "ptoBurden",
+            "value": 100,
+            "weight": 0.15,
+            "explanation": "2 PTO days for 3.1 usable days."
+          },
+          {
+            "key": "recovery",
+            "value": 96.4,
+            "weight": 0.15,
+            "explanation": "3 hours of time-zone change; about 0.2 recovery days."
+          },
+          {
+            "key": "tripImportance",
+            "value": 90,
+            "weight": 0.15,
+            "explanation": "Visiting people purpose, importance 5/5, excitement 8/10."
+          }
+        ],
+        "reasons": [
+          "The stay reasonably covers the time, cost, PTO, and recovery burden."
+        ],
+        "flipVariable": {
+          "key": "usableDayRatio",
+          "label": "Usable-day ratio",
+          "action": "Usable-day ratio is the main remaining drag; the trip already clears the stay-length threshold."
+        },
+        "currency": "USD"
+      },
+      "invariants": {
+        "finiteBoundedScore": true,
+        "comfortableGteMinimum": true,
+        "sixFactorBreakdown": true,
+        "factorWeightsSumToOne": true,
+        "invalidOutputFailsClosed": null,
+        "expectationSpecificCriteria": true
+      },
+      "scenarioVerdict": "PASS",
+      "reason": "Important within-budget visit reaches comfortable length."
+    },
+    {
+      "id": "S05",
+      "label": "long-haul two-night visiting trip",
+      "input": {
+        "destination": "Brief family visit",
+        "purpose": "visiting",
+        "oneWayHours": 10,
+        "nights": 2,
+        "transportCost": 1500,
+        "nightlyCost": 250,
+        "extraCosts": 200,
+        "totalBudget": 2500,
+        "currency": "EUR",
+        "ptoDays": 2,
+        "timezoneDelta": 7,
+        "excitement": 6,
+        "importance": 3,
+        "pace": "balanced"
+      },
+      "preregisteredExpectation": "Low-to-middling value because two days is inefficient for a long-haul trip despite being within budget.",
+      "actual": {
+        "valid": true,
+        "validationErrors": [],
+        "score": 26,
+        "verdict": "Probably not worth it yet",
+        "minimumViableNights": 7,
+        "comfortableNights": 8,
+        "usableDays": 0.5,
+        "totalCost": 2200,
+        "budgetFit": 100,
+        "stayFit": 0.2857142857142857,
+        "breakdownCount": 6,
+        "factorWeightSum": 1,
+        "factors": [
+          {
+            "key": "travelFriction",
+            "value": 23.076923076923077,
+            "weight": 0.2,
+            "explanation": "20.0 hours round trip versus 0.5 usable days."
+          },
+          {
+            "key": "usableDayRatio",
+            "value": 25,
+            "weight": 0.15,
+            "explanation": "25% of planned nights remain usable after transit and recovery."
+          },
+          {
+            "key": "costPerDay",
+            "value": 28.40909090909091,
+            "weight": 0.2,
+            "explanation": "4400 EUR per usable day against your stated budget."
+          },
+          {
+            "key": "ptoBurden",
+            "value": 25,
+            "weight": 0.15,
+            "explanation": "2 PTO days for 0.5 usable days."
+          },
+          {
+            "key": "recovery",
+            "value": 85.6,
+            "weight": 0.15,
+            "explanation": "7 hours of time-zone change; about 1.0 recovery days."
+          },
+          {
+            "key": "tripImportance",
+            "value": 64,
+            "weight": 0.15,
+            "explanation": "Visiting people purpose, importance 3/5, excitement 6/10."
+          }
+        ],
+        "reasons": [
+          "Add 5 nights to better amortize the travel friction.",
+          "The time-zone change materially reduces the first usable days."
+        ],
+        "flipVariable": {
+          "key": "nights",
+          "label": "Stay length",
+          "action": "Add 5 nights; this is the clearest path to a viable stay."
+        },
+        "currency": "EUR"
+      },
+      "invariants": {
+        "finiteBoundedScore": true,
+        "comfortableGteMinimum": true,
+        "sixFactorBreakdown": true,
+        "factorWeightsSumToOne": true,
+        "invalidOutputFailsClosed": null,
+        "expectationSpecificCriteria": true
+      },
+      "scenarioVerdict": "PASS",
+      "reason": "Two-night long-haul trip is strongly penalized."
+    },
+    {
+      "id": "S06",
+      "label": "long-haul eight-night visiting trip, matched total cost",
+      "input": {
+        "destination": "Longer family visit",
+        "purpose": "visiting",
+        "oneWayHours": 10,
+        "nights": 8,
+        "transportCost": 1500,
+        "nightlyCost": 62.5,
+        "extraCosts": 200,
+        "totalBudget": 2500,
+        "currency": "EUR",
+        "ptoDays": 2,
+        "timezoneDelta": 7,
+        "excitement": 6,
+        "importance": 3,
+        "pace": "balanced"
+      },
+      "preregisteredExpectation": "Should score no lower than S05 and preferably materially higher because the same travel, total cost, and PTO buys a rationally longer visit.",
+      "actual": {
+        "valid": true,
+        "validationErrors": [],
+        "score": 68,
+        "verdict": "Probably worth it",
+        "minimumViableNights": 7,
+        "comfortableNights": 8,
+        "usableDays": 5.333333333333333,
+        "totalCost": 2200,
+        "budgetFit": 100,
+        "stayFit": 1,
+        "breakdownCount": 6,
+        "factorWeightSum": 1,
+        "factors": [
+          {
+            "key": "travelFriction",
+            "value": 76.19047619047619,
+            "weight": 0.2,
+            "explanation": "20.0 hours round trip versus 5.3 usable days."
+          },
+          {
+            "key": "usableDayRatio",
+            "value": 66.66666666666666,
+            "weight": 0.15,
+            "explanation": "67% of planned nights remain usable after transit and recovery."
+          },
+          {
+            "key": "costPerDay",
+            "value": 75.75757575757575,
+            "weight": 0.2,
+            "explanation": "413 EUR per usable day against your stated budget."
+          },
+          {
+            "key": "ptoBurden",
+            "value": 100,
+            "weight": 0.15,
+            "explanation": "2 PTO days for 5.3 usable days."
+          },
+          {
+            "key": "recovery",
+            "value": 82,
+            "weight": 0.15,
+            "explanation": "7 hours of time-zone change; about 1.0 recovery days."
+          },
+          {
+            "key": "tripImportance",
+            "value": 64,
+            "weight": 0.15,
+            "explanation": "Visiting people purpose, importance 3/5, excitement 6/10."
+          }
+        ],
+        "reasons": [
+          "The time-zone change materially reduces the first usable days."
+        ],
+        "flipVariable": {
+          "key": "tripImportance",
+          "label": "Trip importance",
+          "action": "Trip importance is the main remaining drag; the trip already clears the stay-length threshold."
+        },
+        "currency": "EUR"
+      },
+      "invariants": {
+        "finiteBoundedScore": true,
+        "comfortableGteMinimum": true,
+        "sixFactorBreakdown": true,
+        "factorWeightsSumToOne": true,
+        "invalidOutputFailsClosed": null,
+        "expectationSpecificCriteria": true
+      },
+      "scenarioVerdict": "PASS",
+      "reason": "Matched-cost eight-night stay gains 42 points over S05."
+    },
+    {
+      "id": "S07",
+      "label": "nearby low-importance low-excitement leisure",
+      "input": {
+        "destination": "Optional local break",
+        "purpose": "leisure",
+        "oneWayHours": 1,
+        "nights": 3,
+        "transportCost": 50,
+        "nightlyCost": 40,
+        "extraCosts": 30,
+        "totalBudget": 1000,
+        "currency": "GBP",
+        "ptoDays": 1,
+        "timezoneDelta": 0,
+        "excitement": 3,
+        "importance": 1,
+        "pace": "relaxed"
+      },
+      "preregisteredExpectation": "Cheap and easy but low-importance: acceptable yet restrained score; importance must prevent an implausibly excellent verdict.",
+      "actual": {
+        "valid": true,
+        "validationErrors": [],
+        "score": 65,
+        "verdict": "Probably worth it",
+        "minimumViableNights": 1,
+        "comfortableNights": 2,
+        "usableDays": 2.8333333333333335,
+        "totalCost": 200,
+        "budgetFit": 100,
+        "stayFit": 1,
+        "breakdownCount": 6,
+        "factorWeightSum": 1,
+        "factors": [
+          {
+            "key": "travelFriction",
+            "value": 94.44444444444444,
+            "weight": 0.2,
+            "explanation": "2.0 hours round trip versus 2.8 usable days."
+          },
+          {
+            "key": "usableDayRatio",
+            "value": 94.44444444444446,
+            "weight": 0.15,
+            "explanation": "94% of planned nights remain usable after transit and recovery."
+          },
+          {
+            "key": "costPerDay",
+            "value": 100,
+            "weight": 0.2,
+            "explanation": "71 GBP per usable day against your stated budget."
+          },
+          {
+            "key": "ptoBurden",
+            "value": 100,
+            "weight": 0.15,
+            "explanation": "1 PTO day for 2.8 usable days."
+          },
+          {
+            "key": "recovery",
+            "value": 100,
+            "weight": 0.15,
+            "explanation": "0 hours of time-zone change; about 0.0 recovery days."
+          },
+          {
+            "key": "tripImportance",
+            "value": 27,
+            "weight": 0.15,
+            "explanation": "Leisure purpose, importance 1/5, excitement 3/10."
+          }
+        ],
+        "reasons": [
+          "The stay reasonably covers the time, cost, PTO, and recovery burden."
+        ],
+        "flipVariable": {
+          "key": "tripImportance",
+          "label": "Trip importance",
+          "action": "Trip importance is the main remaining drag; the trip already clears the stay-length threshold."
+        },
+        "currency": "GBP"
+      },
+      "invariants": {
+        "finiteBoundedScore": true,
+        "comfortableGteMinimum": true,
+        "sixFactorBreakdown": true,
+        "factorWeightsSumToOne": true,
+        "invalidOutputFailsClosed": null,
+        "expectationSpecificCriteria": true
+      },
+      "scenarioVerdict": "PASS",
+      "reason": "Low desire restrains score to 65 and prevents Strong yes."
+    },
+    {
+      "id": "S08",
+      "label": "long-haul high-importance event in JPY",
+      "input": {
+        "destination": "International final",
+        "purpose": "event",
+        "oneWayHours": 12,
+        "nights": 4,
+        "transportCost": 100000,
+        "nightlyCost": 15000,
+        "extraCosts": 20000,
+        "totalBudget": 200000,
+        "currency": "JPY",
+        "ptoDays": 3,
+        "timezoneDelta": 9,
+        "excitement": 10,
+        "importance": 5,
+        "pace": "packed"
+      },
+      "preregisteredExpectation": "Currency magnitude must not itself crush or inflate worth: mostly ratio-based budget treatment, finite bounded output, event importance balanced against long haul.",
+      "actual": {
+        "valid": true,
+        "validationErrors": [],
+        "score": 35,
+        "verdict": "Probably not worth it yet",
+        "minimumViableNights": 6,
+        "comfortableNights": 8,
+        "usableDays": 0.5999999999999999,
+        "totalCost": 180000,
+        "budgetFit": 100,
+        "stayFit": 0.6666666666666666,
+        "breakdownCount": 6,
+        "factorWeightSum": 1,
+        "factors": [
+          {
+            "key": "travelFriction",
+            "value": 23.076923076923073,
+            "weight": 0.2,
+            "explanation": "24.0 hours round trip versus 0.6 usable days."
+          },
+          {
+            "key": "usableDayRatio",
+            "value": 14.999999999999996,
+            "weight": 0.15,
+            "explanation": "15% of planned nights remain usable after transit and recovery."
+          },
+          {
+            "key": "costPerDay",
+            "value": 16.666666666666664,
+            "weight": 0.2,
+            "explanation": "300000 JPY per usable day against your stated budget."
+          },
+          {
+            "key": "ptoBurden",
+            "value": 19.999999999999996,
+            "weight": 0.15,
+            "explanation": "3 PTO days for 0.6 usable days."
+          },
+          {
+            "key": "recovery",
+            "value": 74.8,
+            "weight": 0.15,
+            "explanation": "9 hours of time-zone change; about 1.4 recovery days."
+          },
+          {
+            "key": "tripImportance",
+            "value": 100,
+            "weight": 0.15,
+            "explanation": "Event purpose, importance 5/5, excitement 10/10."
+          }
+        ],
+        "reasons": [
+          "Add 2 nights to better amortize the travel friction.",
+          "The time-zone change materially reduces the first usable days.",
+          "A fixed, important event can rationally override an otherwise marginal efficiency score."
+        ],
+        "flipVariable": {
+          "key": "nights",
+          "label": "Stay length",
+          "action": "Add 2 nights; this is the clearest path to a viable stay."
+        },
+        "currency": "JPY"
+      },
+      "invariants": {
+        "finiteBoundedScore": true,
+        "comfortableGteMinimum": true,
+        "sixFactorBreakdown": true,
+        "factorWeightsSumToOne": true,
+        "invalidOutputFailsClosed": null,
+        "expectationSpecificCriteria": true
+      },
+      "scenarioVerdict": "PASS",
+      "reason": "JPY values are accepted and preserved; total remains 180,000 JPY."
+    },
+    {
+      "id": "S09",
+      "label": "zero-value boundary",
+      "input": {
+        "destination": "Boundary staycation",
+        "purpose": "leisure",
+        "oneWayHours": 0,
+        "nights": 1,
+        "transportCost": 0,
+        "nightlyCost": 0,
+        "extraCosts": 0,
+        "totalBudget": 0,
+        "currency": "USD",
+        "ptoDays": 0,
+        "timezoneDelta": 0,
+        "excitement": 1,
+        "importance": 1,
+        "pace": "packed"
+      },
+      "preregisteredExpectation": "Boundary values should either be explicitly rejected with a useful validation message or accepted without divide-by-zero or non-finite output.",
+      "actual": {
+        "valid": false,
+        "validationErrors": [
+          "One-way travel time must be between 0.25 and 36.",
+          "Total trip budget must be between 1 and 250000."
+        ],
+        "score": null,
+        "verdict": "Fix inputs to calculate",
+        "minimumViableNights": null,
+        "comfortableNights": null,
+        "usableDays": null,
+        "totalCost": null,
+        "budgetFit": null,
+        "stayFit": null,
+        "breakdownCount": 0,
+        "factorWeightSum": 0,
+        "factors": [],
+        "reasons": [],
+        "flipVariable": null,
+        "currency": "USD"
+      },
+      "invariants": {
+        "finiteBoundedScore": true,
+        "comfortableGteMinimum": true,
+        "sixFactorBreakdown": true,
+        "factorWeightsSumToOne": true,
+        "invalidOutputFailsClosed": true,
+        "expectationSpecificCriteria": true
+      },
+      "scenarioVerdict": "PASS",
+      "reason": "Boundary values are rejected with no normal output."
+    },
+    {
+      "id": "S10",
+      "label": "malformed and unsupported values",
+      "input": {
+        "destination": "Malformed",
+        "purpose": "unsupported-purpose",
+        "oneWayHours": "not-a-number",
+        "nights": -3,
+        "transportCost": "not-a-number",
+        "nightlyCost": -20,
+        "extraCosts": "Infinity",
+        "totalBudget": -1,
+        "currency": "ZZZ",
+        "ptoDays": -2,
+        "timezoneDelta": 99,
+        "excitement": 0,
+        "importance": "unknown",
+        "pace": "teleport"
+      },
+      "preregisteredExpectation": "Must be rejected clearly and comprehensively; must not return a normal-looking score or silently coerce impossible and unsupported values.",
+      "actual": {
+        "valid": false,
+        "validationErrors": [
+          "Choose a supported currency.",
+          "One-way travel time must be a number.",
+          "Planned nights must be between 1 and 60.",
+          "Transportation cost must be a number.",
+          "Cost per night must be between 0 and 10000.",
+          "Other trip costs must be a number.",
+          "Total trip budget must be between 1 and 250000.",
+          "PTO days must be between 0 and 60.",
+          "Time-zone difference must be between 0 and 18.",
+          "Excitement must be between 1 and 10.",
+          "Trip importance must be a number.",
+          "Choose a valid trip purpose.",
+          "Choose a valid travel pace."
+        ],
+        "score": null,
+        "verdict": "Fix inputs to calculate",
+        "minimumViableNights": null,
+        "comfortableNights": null,
+        "usableDays": null,
+        "totalCost": null,
+        "budgetFit": null,
+        "stayFit": null,
+        "breakdownCount": 0,
+        "factorWeightSum": 0,
+        "factors": [],
+        "reasons": [],
+        "flipVariable": null,
+        "currency": "USD"
+      },
+      "invariants": {
+        "finiteBoundedScore": true,
+        "comfortableGteMinimum": true,
+        "sixFactorBreakdown": true,
+        "factorWeightsSumToOne": true,
+        "invalidOutputFailsClosed": true,
+        "expectationSpecificCriteria": true
+      },
+      "scenarioVerdict": "PASS",
+      "reason": "Malformed values are comprehensively rejected with no normal output."
+    }
+  ],
+  "priorDefectClosure": [
+    {
+      "defect": "Currency-scaled limits / JPY mutation",
+      "disposition": "CLOSED",
+      "evidence": "S08 valid; 15,000 JPY/night and 180,000 JPY total preserved."
+    },
+    {
+      "defect": "Low-desire calibration",
+      "disposition": "CLOSED",
+      "evidence": "S07 is 65/100, Probably worth it, not Strong yes."
+    },
+    {
+      "defect": "Invalid outputs/UI fail open",
+      "disposition": "CLOSED",
+      "evidence": "S09/S10 return null/empty computed outputs; both live invalid browser paths clear details and disable share/feedback."
+    }
+  ],
+  "summary": {
+    "scenarioPasses": 10,
+    "scenarioFailures": [],
+    "globalFailClosedInvariant": true,
+    "overallVerdict": "PASS",
+    "maturityConclusion": "Synthetic evidence only; not real-user-proven."
+  }
+}

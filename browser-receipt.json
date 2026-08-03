@@ -1,0 +1,56 @@
+{
+  "status": "PASS",
+  "local": {
+    "title": "Worth The Trip? \u2014 Outing & Trip Calculator",
+    "type": "outing",
+    "options": [
+      "2 hours",
+      "3 hours",
+      "4.5 hours",
+      "6 hours"
+    ],
+    "factors": 6,
+    "score": 85,
+    "destination": "Fremont",
+    "urlVersion": true,
+    "overflow": false,
+    "errorsHidden": true
+  },
+  "sensitivity": {
+    "before": 3,
+    "after": 7,
+    "urlHasControls": true
+  },
+  "longTrip": {
+    "type": "overnight",
+    "destination": "Tokyo",
+    "options": [
+      "8 nights",
+      "9 nights",
+      "11 nights",
+      "13 nights"
+    ],
+    "nightsVisible": true,
+    "visitHidden": true,
+    "factors": 6
+  },
+  "mobile": {
+    "destination": "Foster City \u2192 Hillsborough",
+    "options": [
+      "1.25 hours",
+      "1.5 hours",
+      "2.5 hours",
+      "6 hours"
+    ],
+    "overflow": false,
+    "factors": 6,
+    "errorsHidden": true
+  },
+  "invalid": {
+    "hidden": false,
+    "score": "\u2014",
+    "options": 0,
+    "invalidShared": false
+  },
+  "consoleErrors": 0
+}

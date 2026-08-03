@@ -1,0 +1,193 @@
+{
+  "receiptType": "independent-blinded-scenario-evaluation",
+  "schemaVersion": 1,
+  "evaluatorRole": "independent third tester",
+  "evaluatedAt": "2026-08-02T22:54:50+00:00",
+  "implementation": {
+    "file": "app.js",
+    "sha256": "a988fe495e8e1b434cd9a3a500bc25918c318c208a6de6803bbebdbd83daade0",
+    "reportedVersion": "heuristic v0.1",
+    "entryPoint": "calculateTripWorth"
+  },
+  "blindProtocol": {
+    "expectationsRecordedBeforeImplementationInspectionOrExecution": true,
+    "scenarioCount": 10,
+    "coverage": [
+      "nearby",
+      "long-haul",
+      "leisure",
+      "event",
+      "visiting",
+      "zero PTO",
+      "over-budget",
+      "USD",
+      "EUR",
+      "GBP",
+      "JPY",
+      "boundary inputs",
+      "malformed inputs",
+      "high importance",
+      "low importance"
+    ]
+  },
+  "globalInvariants": {
+    "finiteBoundedScoresForAllTen": true,
+    "comfortableNightsGteMinimumViableNightsForAllTen": true,
+    "sixVisibleFactorsWithFiniteBoundedValuesWeightsAndExplanationsForAllTen": true,
+    "factorWeightsSumToOneForAllTen": true,
+    "longerStayPairIsDirectionallyRational": true,
+    "purposeControlIsDirectionallyRational": true,
+    "validationFailsClosedWithoutDisplayingNormalScore": false
+  },
+  "supplementalPurposeControl": {
+    "inputHeldConstant": {
+      "oneWayHours": 6,
+      "nights": 4,
+      "transportCost": 500,
+      "nightlyCost": 100,
+      "extraCosts": 100,
+      "totalBudget": 1200,
+      "currency": "USD",
+      "ptoDays": 2,
+      "timezoneDelta": 3,
+      "excitement": 7,
+      "importance": 4,
+      "pace": "balanced"
+    },
+    "results": [
+      {"purpose": "leisure", "score": 82, "minimumViableNights": 4, "tripImportanceFactor": 73},
+      {"purpose": "visiting", "score": 83, "minimumViableNights": 4, "tripImportanceFactor": 77},
+      {"purpose": "event", "score": 84, "minimumViableNights": 4, "tripImportanceFactor": 81}
+    ],
+    "verdict": "PASS",
+    "reason": "The purpose factor changes in the declared rational order without destabilizing stay recommendations."
+  },
+  "scenarios": [
+    {
+      "id": "S01",
+      "label": "nearby leisure, zero PTO",
+      "input": {"destination":"Nearby cabin","purpose":"leisure","oneWayHours":1,"nights":2,"transportCost":50,"nightlyCost":100,"extraCosts":50,"totalBudget":500,"currency":"USD","ptoDays":0,"timezoneDelta":0,"excitement":7,"importance":3,"pace":"balanced"},
+      "preregisteredExpectation": "A plausible positive short break: mid-to-good score, no PTO penalty, modest travel burden; accepted with six factors.",
+      "actual": {"valid":true,"validationErrors":[],"score":92,"verdict":"Strong yes","minimumViableNights":1,"comfortableNights":2,"usableDays":1.83,"totalCost":300,"breakdownCount":6},
+      "invariants": {"finiteBoundedScore":true,"comfortableGteMinimum":true,"sixFactorBreakdown":true,"validationRational":true},
+      "scenarioVerdict": "PASS",
+      "reason": "The very high result is optimistic but directionally coherent for a cheap, nearby, no-PTO trip, and all structural invariants hold."
+    },
+    {
+      "id": "S02",
+      "label": "long-haul high-importance leisure",
+      "input": {"destination":"Long-haul holiday","purpose":"leisure","oneWayHours":11,"nights":7,"transportCost":1000,"nightlyCost":150,"extraCosts":450,"totalBudget":3000,"currency":"USD","ptoDays":5,"timezoneDelta":8,"excitement":9,"importance":5,"pace":"balanced"},
+      "preregisteredExpectation": "Worthwhile but not perfect: high importance and a full week should offset some long-haul, cost, and PTO burden.",
+      "actual": {"valid":true,"score":73,"verdict":"Probably worth it","minimumViableNights":7,"comfortableNights":9,"usableDays":3.97,"totalCost":2500,"breakdownCount":6},
+      "invariants": {"finiteBoundedScore":true,"comfortableGteMinimum":true,"sixFactorBreakdown":true,"validationRational":true},
+      "scenarioVerdict": "PASS",
+      "reason": "The score and verdict balance importance against long-haul friction, PTO, recovery, and incomplete comfort."
+    },
+    {
+      "id": "S03",
+      "label": "nearby high-importance event, zero PTO, over budget",
+      "input": {"destination":"Nearby championship","purpose":"event","oneWayHours":1.5,"nights":1,"transportCost":200,"nightlyCost":150,"extraCosts":100,"totalBudget":300,"currency":"USD","ptoDays":0,"timezoneDelta":0,"excitement":9,"importance":5,"pace":"packed"},
+      "preregisteredExpectation": "Over-budget should visibly hurt, but a high-importance one-off nearby event can remain rational; not an unqualified top verdict.",
+      "actual": {"valid":true,"score":81,"verdict":"Worth it for the occasion","minimumViableNights":1,"comfortableNights":2,"totalCost":450,"budgetFit":50,"costPerDayFactor":50,"breakdownCount":6,"flipVariable":"cost"},
+      "invariants": {"finiteBoundedScore":true,"comfortableGteMinimum":true,"sixFactorBreakdown":true,"validationRational":true},
+      "scenarioVerdict": "PASS",
+      "reason": "The occasion-specific verdict is qualified, and both the 50/100 cost factor and cost flip variable keep the 50% budget overrun visible."
+    },
+    {
+      "id": "S04",
+      "label": "medium-distance high-importance visiting",
+      "input": {"destination":"Visit close friends","purpose":"visiting","oneWayHours":4,"nights":4,"transportCost":300,"nightlyCost":100,"extraCosts":100,"totalBudget":1000,"currency":"USD","ptoDays":2,"timezoneDelta":3,"excitement":8,"importance":5,"pace":"balanced"},
+      "preregisteredExpectation": "Solidly worthwhile visiting trip: high importance and adequate stay, with moderate cost, PTO, and travel deductions.",
+      "actual": {"valid":true,"score":91,"verdict":"Strong yes","minimumViableNights":3,"comfortableNights":4,"usableDays":3.13,"totalCost":800,"breakdownCount":6},
+      "invariants": {"finiteBoundedScore":true,"comfortableGteMinimum":true,"sixFactorBreakdown":true,"validationRational":true},
+      "scenarioVerdict": "PASS",
+      "reason": "The stay reaches comfortable length and the high score is directionally plausible for an important within-budget visit."
+    },
+    {
+      "id": "S05",
+      "label": "long-haul two-night visiting trip",
+      "input": {"destination":"Brief family visit","purpose":"visiting","oneWayHours":10,"nights":2,"transportCost":1500,"nightlyCost":250,"extraCosts":200,"totalBudget":2500,"currency":"EUR","ptoDays":2,"timezoneDelta":7,"excitement":6,"importance":3,"pace":"balanced"},
+      "preregisteredExpectation": "Low-to-middling value because two days is inefficient for a long-haul trip despite being within budget.",
+      "actual": {"valid":true,"score":30,"verdict":"Probably not worth it yet","minimumViableNights":7,"comfortableNights":8,"usableDays":0.5,"totalCost":2200,"stayFit":0.286,"breakdownCount":6},
+      "invariants": {"finiteBoundedScore":true,"comfortableGteMinimum":true,"sixFactorBreakdown":true,"validationRational":true},
+      "scenarioVerdict": "PASS",
+      "reason": "The heuristic strongly penalizes the inefficient two-night long-haul stay as expected."
+    },
+    {
+      "id": "S06",
+      "label": "long-haul eight-night visiting trip, matched total cost",
+      "input": {"destination":"Longer family visit","purpose":"visiting","oneWayHours":10,"nights":8,"transportCost":1500,"nightlyCost":62.5,"extraCosts":200,"totalBudget":2500,"currency":"EUR","ptoDays":2,"timezoneDelta":7,"excitement":6,"importance":3,"pace":"balanced"},
+      "preregisteredExpectation": "Should score no lower than S05 and preferably materially higher because the same travel, total cost, and PTO buys a rationally longer visit.",
+      "actual": {"valid":true,"score":77,"verdict":"Probably worth it","minimumViableNights":7,"comfortableNights":8,"usableDays":5.33,"totalCost":2200,"stayFit":1,"breakdownCount":6,"scoreDeltaVsS05":47},
+      "invariants": {"finiteBoundedScore":true,"comfortableGteMinimum":true,"sixFactorBreakdown":true,"validationRational":true,"longerStayMonotonic":true},
+      "scenarioVerdict": "PASS",
+      "reason": "At matched total cost, travel, PTO, motivation, and currency, extending from two to eight nights raises the score by 47 points."
+    },
+    {
+      "id": "S07",
+      "label": "nearby low-importance low-excitement leisure",
+      "input": {"destination":"Optional local break","purpose":"leisure","oneWayHours":1,"nights":3,"transportCost":50,"nightlyCost":40,"extraCosts":30,"totalBudget":1000,"currency":"GBP","ptoDays":1,"timezoneDelta":0,"excitement":3,"importance":1,"pace":"relaxed"},
+      "preregisteredExpectation": "Cheap and easy but low-importance: acceptable yet restrained score; importance must prevent an implausibly excellent verdict.",
+      "actual": {"valid":true,"score":87,"verdict":"Strong yes","minimumViableNights":1,"comfortableNights":2,"usableDays":2.83,"totalCost":200,"tripImportanceFactor":27,"breakdownCount":6},
+      "invariants": {"finiteBoundedScore":true,"comfortableGteMinimum":true,"sixFactorBreakdown":true,"validationRational":true,"qualitativePlausibility":false},
+      "scenarioVerdict": "FAIL",
+      "reason": "A trip rated only 1/5 importance and 3/10 excitement still receives 87 and Strong yes; the 15% importance factor cannot sufficiently restrain an efficient trip."
+    },
+    {
+      "id": "S08",
+      "label": "long-haul high-importance event in JPY",
+      "input": {"destination":"International final","purpose":"event","oneWayHours":12,"nights":4,"transportCost":100000,"nightlyCost":15000,"extraCosts":20000,"totalBudget":200000,"currency":"JPY","ptoDays":3,"timezoneDelta":9,"excitement":10,"importance":5,"pace":"packed"},
+      "preregisteredExpectation": "Currency magnitude must not itself crush or inflate worth: mostly ratio-based budget treatment, finite bounded output, event importance balanced against long haul.",
+      "actual": {"valid":false,"validationErrors":["Cost per night must be between 0 and 10000."],"score":35,"verdict":"Probably not worth it yet","minimumViableNights":6,"comfortableNights":8,"submittedTotalCost":180000,"calculatedTotalCost":160000,"breakdownCount":6},
+      "invariants": {"finiteBoundedScore":true,"comfortableGteMinimum":true,"sixFactorBreakdown":true,"validationRational":false,"preservesSubmittedNominalAmounts":false},
+      "scenarioVerdict": "FAIL",
+      "reason": "The supported JPY input is falsely invalidated by a currency-agnostic 10,000 nightly cap and silently clamped, changing total cost from 180,000 JPY to 160,000 JPY."
+    },
+    {
+      "id": "S09",
+      "label": "zero-value boundary",
+      "input": {"destination":"Boundary staycation","purpose":"leisure","oneWayHours":0,"nights":1,"transportCost":0,"nightlyCost":0,"extraCosts":0,"totalBudget":0,"currency":"USD","ptoDays":0,"timezoneDelta":0,"excitement":1,"importance":1,"pace":"packed"},
+      "preregisteredExpectation": "Boundary values should either be explicitly rejected with a useful validation message or accepted without divide-by-zero or non-finite output.",
+      "actual": {"valid":false,"validationErrors":["One-way travel time must be between 0.25 and 36.","Total trip budget must be between 1 and 250000."],"score":85,"verdict":"Strong yes","minimumViableNights":1,"comfortableNights":2,"breakdownCount":6},
+      "invariants": {"finiteBoundedScore":true,"comfortableGteMinimum":true,"sixFactorBreakdown":true,"validationRational":true},
+      "scenarioVerdict": "PASS",
+      "reason": "The impossible zero travel time and zero budget are explicitly rejected and no non-finite arithmetic occurs; however, the still-visible 85 score contributes to the cross-cutting invalid-result UX defect."
+    },
+    {
+      "id": "S10",
+      "label": "malformed and unsupported values",
+      "input": {"destination":"Malformed","purpose":"unsupported-purpose","oneWayHours":"not-a-number","nights":-3,"transportCost":"not-a-number","nightlyCost":-20,"extraCosts":"Infinity","totalBudget":-1,"currency":"ZZZ","ptoDays":-2,"timezoneDelta":99,"excitement":0,"importance":"unknown","pace":"teleport"},
+      "preregisteredExpectation": "Must be rejected clearly and comprehensively; must not return a normal-looking score or silently coerce impossible and unsupported values.",
+      "actual": {"valid":false,"validationErrorCount":13,"score":55,"verdict":"Borderline — adjust the trip","minimumViableNights":4,"comfortableNights":8,"totalCost":0,"currency":"USD","breakdownCount":6},
+      "invariants": {"finiteBoundedScore":true,"comfortableGteMinimum":true,"sixFactorBreakdown":true,"rejectedClearly":true,"failsClosedWithoutNormalResult":false},
+      "scenarioVerdict": "FAIL",
+      "reason": "Validation finds the malformed values, but fallback and clamped values are still scored into a plausible 55/100 result with a normal verdict and full breakdown. The browser replaces only the verdict text while leaving the score ring and computed details visible."
+    }
+  ],
+  "summary": {
+    "scenarioPasses": 7,
+    "scenarioFailures": 3,
+    "overallVerdict": "FAIL",
+    "maturityConclusion": "This blinded synthetic evaluation does not clear the independent tested gate. Even after fixes, synthetic passing can establish tested only, never real-user-proven.",
+    "defects": [
+      {
+        "severity": "high",
+        "type": "formula-validation-currency",
+        "title": "Currency-agnostic amount caps reject and mutate ordinary JPY inputs",
+        "evidence": "S08: 15,000 JPY/night is rejected against a 10,000 cap and clamped, reducing the calculated total by 20,000 JPY."
+      },
+      {
+        "severity": "medium",
+        "type": "formula-calibration",
+        "title": "Low desire cannot meaningfully suppress an efficient itinerary",
+        "evidence": "S07: importance 1/5 and excitement 3/10 produce a 27/100 importance factor but still yield 87/100 and Strong yes."
+      },
+      {
+        "severity": "medium",
+        "type": "validation-ux",
+        "title": "Invalid inputs still generate and display normal-looking scores and details",
+        "evidence": "S10 returns 55/100 plus a normal verdict and full breakdown; index.html updates score and details before changing only the verdict to Fix inputs to calculate. S09 similarly leaves an 85 score visible."
+      }
+    ]
+  }
+}
