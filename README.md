@@ -4,11 +4,11 @@ A static, no-backend calculator for both **local outings/day trips** and **overn
 
 ## Interface
 
-- Core screen: trip type, destination, reason, activity, one-way travel time, and proposed stay.
+- Core screen: trip type, optional destination, reason/activity, and one-way travel time.
 - Travel and stay controls have both sliders and exact numeric inputs.
-- Six quick travel-time choices cover 10 minutes through 10 hours.
+- The nonlinear travel slider covers five minutes through 36 hours while still allowing an exact value.
 - Interest, hassle, group size, energy, pace, costs, PTO, and time zone are visibly marked optional and collapsed by default.
-- Results use conversational text rather than a score gauge, weighted bars, or dashboard styling.
+- Results use one direct recommendation and one concrete reason; alternate lengths and methodology sit behind disclosures.
 - Every input recalculates immediately and remains shareable in the URL.
 
 ## Inputs that change the recommendation

@@ -59,6 +59,8 @@ desktop = evaluate("""(() => ({
   options: [...document.querySelectorAll('.stay-option strong')].map(x => x.textContent),
   optionalOpen: document.querySelector('#optional-fields').open,
   travelOutput: document.querySelector('#travel-time-output').textContent,
+  travelAria: document.querySelector('#travelTimeRange').getAttribute('aria-valuetext'),
+  quickButtons: document.querySelectorAll('[data-travel-minutes]').length,
   dashboardPieces: document.querySelectorAll('.score,.score-row,.factor-bar').length,
   overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
   errorsHidden: document.querySelector('#validation-errors').hidden,
@@ -67,7 +69,8 @@ desktop = evaluate("""(() => ({
 assert desktop["title"] == "Worth The Trip?"
 assert desktop["type"] == "outing" and "3 hours" in desktop["summary"]
 assert desktop["options"] == ["2 hours", "3 hours", "4.5 hours", "6 hours"]
-assert not desktop["optionalOpen"] and desktop["travelOutput"] == "20 min"
+assert not desktop["optionalOpen"] and desktop["travelOutput"] == "20 min" and desktop["travelAria"] == "20 min"
+assert desktop["quickButtons"] == 0
 assert desktop["dashboardPieces"] == 0 and not desktop["overflow"] and desktop["errorsHidden"] and desktop["urlVersion"]
 screenshot(ROOT / "desktop-preview.png")
 
@@ -81,7 +84,7 @@ slider_cases = evaluate("""(() => {
     summary:document.querySelector('#result-summary').textContent,
     url:location.search
   };
-  document.querySelector('[data-travel-minutes="600"]').click();
+  slider.value='14'; slider.dispatchEvent(new Event('input',{bubbles:true}));
   const tenHour={
     output:document.querySelector('#travel-time-output').textContent,
     amount:document.querySelector('#oneWayAmount').value,
