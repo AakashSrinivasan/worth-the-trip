@@ -1,5 +1,6 @@
 import base64
 import json
+import os
 import time
 import urllib.request
 from pathlib import Path
@@ -7,7 +8,8 @@ import websocket
 
 ROOT = Path(__file__).resolve().parent
 PORT = 9223
-req = urllib.request.Request(f"http://127.0.0.1:{PORT}/json/new?http://127.0.0.1:8080/", method="PUT")
+BASE_URL = os.environ.get("BASE_URL", "http://127.0.0.1:8080").rstrip("/")
+req = urllib.request.Request(f"http://127.0.0.1:{PORT}/json/new?{BASE_URL}/", method="PUT")
 with urllib.request.urlopen(req, timeout=5) as response:
     target = json.load(response)
 ws = websocket.create_connection(target["webSocketDebuggerUrl"], timeout=10, suppress_origin=True)
@@ -48,7 +50,7 @@ call("Page.enable")
 call("Runtime.enable")
 call("Log.enable")
 call("Emulation.setDeviceMetricsOverride", {"width": 1440, "height": 1100, "deviceScaleFactor": 1, "mobile": False})
-navigate("http://127.0.0.1:8080/")
+navigate(f"{BASE_URL}/")
 
 local = evaluate("""(() => ({
   title: document.title,
@@ -93,7 +95,7 @@ assert len(long_trip["options"]) == 4 and all("nights" in value for value in lon
 assert long_trip["nightsVisible"] and long_trip["visitHidden"] and long_trip["factors"] == 6
 
 call("Emulation.setDeviceMetricsOverride", {"width": 390, "height": 844, "deviceScaleFactor": 2, "mobile": True})
-navigate("http://127.0.0.1:8080/?v=0.2&tripType=outing&destination=Foster+City+%E2%86%92+Hillsborough&purpose=visiting&activity=meal&oneWayAmount=20&oneWayUnit=minutes&visitHours=1.5&logistics=easy&coordination=pair&energy=normal&currency=USD&transportCost=8&stayOrActivityCost=25&extraCosts=0&totalBudget=60&excitement=8&importance=4&pace=packed")
+navigate(f"{BASE_URL}/?v=0.2&tripType=outing&destination=Foster+City+%E2%86%92+Hillsborough&purpose=visiting&activity=meal&oneWayAmount=20&oneWayUnit=minutes&visitHours=1.5&logistics=easy&coordination=pair&energy=normal&currency=USD&transportCost=8&stayOrActivityCost=25&extraCosts=0&totalBudget=60&excitement=8&importance=4&pace=packed")
 mobile = evaluate("""(() => ({
   destination: document.querySelector('#destination-label').textContent,
   options: [...document.querySelectorAll('.stay-option strong')].map(x => x.textContent),
