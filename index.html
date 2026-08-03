@@ -3,264 +3,181 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A simple rule-of-thumb calculator for how long a drive, day trip, or vacation should be.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>↗</text></svg>">
+  <meta name="description" content="A practical trip calculator for deciding how long a drive, day trip, or vacation needs to feel worthwhile.">
+  <meta name="theme-color" content="#0b0c0b">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.86em%22 font-size=%2280%22 fill=%22%23a8ff60%22>↗</text></svg>">
   <title>Worth The Trip?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<main>
-  <header class="hero">
-    <a class="brand" href="./">Worth The Trip?</a>
-    <h1>How long should I stay?</h1>
-    <p>Put in the travel time and what you’re going for. We’ll give you a practical range—from a quick visit to making a day or trip of it.</p>
-  </header>
+  <a class="skip-link" href="#calculator">Skip to calculator</a>
+  <div class="site-shell">
+    <header class="topbar">
+      <a class="wordmark" href="./" aria-label="Worth The Trip home">WORTH THE TRIP?</a>
+      <span class="topbar-note">A small calculation for a real-life decision</span>
+    </header>
 
-  <section class="grid">
-    <form class="card trip-form" id="trip-form">
-      <div id="validation-errors" class="validation-errors" role="alert" hidden></div>
-
-      <fieldset class="type-switch">
-        <legend>Trip type</legend>
-        <label><input type="radio" name="tripType" value="outing" checked> Same-day trip</label>
-        <label><input type="radio" name="tripType" value="overnight"> Overnight trip</label>
-      </fieldset>
-
-      <label>Where are you going?
-        <input id="destination" name="destination" value="" maxlength="80" autocomplete="off" placeholder="Optional — Fremont, Tokyo, a friend’s place…">
-      </label>
-
-      <div class="two-up">
-        <label>What’s the reason?
-          <select id="purpose" name="purpose">
-            <option value="leisure" selected>Just for fun</option>
-            <option value="event">A specific event</option>
-            <option value="visiting">Visiting someone</option>
-          </select>
-        </label>
-        <label class="outing-only">What are you doing?
-          <select id="activity" name="activity">
-            <option value="quick">Errand or pickup</option>
-            <option value="meal">Meal or coffee</option>
-            <option value="social">Hanging out</option>
-            <option value="activity" selected>Activity or attraction</option>
-            <option value="explore">Walking around / exploring</option>
-          </select>
-        </label>
-      </div>
-
-      <section class="control-group" aria-labelledby="travel-label">
-        <div class="control-head"><strong id="travel-label">One-way travel time</strong><output id="travel-time-output">20 min</output></div>
-        <input id="travelTimeRange" class="range" type="range" min="0" max="20" step="1" value="3" aria-labelledby="travel-label">
-        <div class="range-ends"><span>5 min</span><span>36 hr</span></div>
-        <div class="exact-row">
-          <span>Exact</span>
-          <input id="oneWayAmount" name="oneWayAmount" type="number" min="0.1" max="2160" step="0.1" value="20" aria-label="Exact one-way travel time">
-          <select id="oneWayUnit" name="oneWayUnit" aria-label="Travel-time unit"><option value="minutes" selected>minutes</option><option value="hours">hours</option></select>
+    <main>
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span>01</span> TRIP CALCULUS</p>
+          <h1 id="hero-title">Is it worth<br><em>the trip?</em></h1>
+          <p class="hero-deck">Tell us how far you’re going. We’ll work out how long you should stay so the travel actually feels worth it.</p>
+        </div>
+        <div class="route-scene" aria-hidden="true">
+          <div class="route-orbit route-orbit-a"></div>
+          <div class="route-orbit route-orbit-b"></div>
+          <div class="route-line"><span class="traveler"></span></div>
+          <span class="route-point route-start"></span>
+          <span class="route-point route-end"></span>
+          <span class="route-label route-label-start">YOU</span>
+          <span class="route-label route-label-end">THERE</span>
+          <span class="route-code">TIME × FRICTION × PURPOSE</span>
         </div>
       </section>
 
-      <details class="optional" id="optional-fields">
-        <summary><span>Cost, energy, and other details <b>Optional</b></span><small>The defaults are normal. You can skip this.</small></summary>
-        <div class="optional-grid">
-          <section class="control-group outing-only optional-wide" aria-labelledby="visit-label">
-            <div class="control-head"><strong id="visit-label">Already have a stay length in mind?</strong><output id="visit-output">3 hours</output></div>
-            <input id="visitHoursRange" class="range" type="range" min="0.5" max="16" step="0.5" value="3" aria-labelledby="visit-label">
-            <div class="range-ends"><span>30 min</span><span>16 hr</span></div>
-            <div class="exact-row compact"><span>Exact</span><input id="visitHours" name="visitHours" type="number" min="0.25" max="24" step="0.25" value="3"><span>hours</span></div>
+      <section class="workbench" id="calculator">
+        <form class="calculator-panel" id="trip-form" novalidate>
+          <div class="section-heading">
+            <p class="eyebrow"><span>02</span> THE BASICS</p>
+            <p class="section-note">Two answers are enough. Everything else is optional.</p>
+          </div>
+
+          <div id="validation-errors" class="validation-errors" role="alert" hidden></div>
+
+          <fieldset class="segmented trip-type">
+            <legend>What kind of trip?</legend>
+            <label><input type="radio" name="tripType" value="outing" checked><span>Same day</span></label>
+            <label><input type="radio" name="tripType" value="overnight"><span>Overnight</span></label>
+          </fieldset>
+
+          <label class="destination-field">
+            <span class="field-label">Where are you going? <small>Optional</small></span>
+            <input id="destination" name="destination" maxlength="80" autocomplete="off" placeholder="Fremont, Tokyo, a friend’s place…">
+          </label>
+
+          <fieldset class="choice-field purpose-field">
+            <legend>What’s pulling you there?</legend>
+            <div class="choice-row">
+              <label><input type="radio" name="purpose" value="leisure" checked><span>Just for fun</span></label>
+              <label><input type="radio" name="purpose" value="event"><span>An event</span></label>
+              <label><input type="radio" name="purpose" value="visiting"><span>Someone I care about</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="choice-field outing-only activity-field">
+            <legend>What are you doing?</legend>
+            <div class="choice-row activity-row">
+              <label><input type="radio" name="activity" value="quick"><span>Errand</span></label>
+              <label><input type="radio" name="activity" value="meal"><span>Food</span></label>
+              <label><input type="radio" name="activity" value="social"><span>Hangout</span></label>
+              <label><input type="radio" name="activity" value="activity" checked><span>Activity</span></label>
+              <label><input type="radio" name="activity" value="explore"><span>Explore</span></label>
+            </div>
+          </fieldset>
+
+          <section class="primary-control" aria-labelledby="travel-label">
+            <div class="control-head">
+              <div>
+                <strong id="travel-label">One-way travel time</strong>
+                <small>Door to door, not just time on the road</small>
+              </div>
+              <output id="travel-time-output">20 min</output>
+            </div>
+            <input id="travelTimeRange" class="range range-primary" type="range" min="0" max="20" step="1" value="3" aria-labelledby="travel-label">
+            <div class="range-ends"><span>5 MIN</span><span>36 HR</span></div>
+            <div class="exact-row">
+              <span>OR ENTER EXACTLY</span>
+              <input id="oneWayAmount" name="oneWayAmount" type="number" min="0.1" max="2160" step="0.1" value="20" aria-label="Exact one-way travel time">
+              <select id="oneWayUnit" name="oneWayUnit" aria-label="Travel-time unit"><option value="minutes" selected>minutes</option><option value="hours">hours</option></select>
+            </div>
           </section>
 
-          <section class="control-group overnight-only optional-wide" hidden aria-labelledby="nights-label">
-            <div class="control-head"><strong id="nights-label">Already have a stay length in mind?</strong><output id="nights-output">5 nights</output></div>
-            <input id="nightsRange" class="range" type="range" min="1" max="30" step="1" value="5" aria-labelledby="nights-label">
-            <div class="range-ends"><span>1 night</span><span>30 nights</span></div>
-            <div class="exact-row compact"><span>Exact</span><input id="nights" name="nights" type="number" min="1" max="60" step="1" value="5"><span>nights</span></div>
-          </section>
+          <details class="calibration" id="optional-fields">
+            <summary>
+              <span><strong>Fine-tune the answer</strong><small>Optional · defaults are already sensible</small></span>
+              <span class="summary-action">OPEN +</span>
+            </summary>
+            <div class="calibration-body">
+              <p class="calibration-intro">Move only what matters. Each signal changes the recommendation as you drag it.</p>
 
-          <div class="optional-divider"><strong>Feel of the trip</strong><span>Only change what actually matters to you.</span></div>
-          <label>How excited are you? <output id="excitement-output">7/10</output>
-            <input id="excitement" name="excitement" class="range" type="range" min="1" max="10" value="7">
-          </label>
-          <label>How important is it? <output id="importance-output">3/5</output>
-            <input id="importance" name="importance" class="range" type="range" min="1" max="5" value="3">
-          </label>
-          <label>Travel hassle
-            <select id="logistics" name="logistics"><option value="easy">Easy and direct</option><option value="normal" selected>Pretty normal</option><option value="heavy">Traffic, transfers, gear, etc.</option></select>
-          </label>
-          <label>Who’s going?
-            <select id="coordination" name="coordination"><option value="solo" selected>Just me</option><option value="pair">Two people</option><option value="group">Group or family</option></select>
-          </label>
-          <label>Your energy
-            <select id="energy" name="energy"><option value="high">High</option><option value="normal" selected>Normal</option><option value="low">Low</option></select>
-          </label>
-          <label>What pace feels right?
-            <select id="pace" name="pace"><option value="relaxed">Relaxed</option><option value="balanced" selected>Balanced</option><option value="packed">Fit a lot in</option></select>
-          </label>
+              <section class="slider-field outing-only" aria-labelledby="visit-label">
+                <div class="slider-head"><label id="visit-label" for="visitHoursRange">Time you planned to spend there</label><output id="visit-output">3 hours</output></div>
+                <input id="visitHoursRange" class="range" type="range" min="0.5" max="16" step="0.5" value="3" aria-labelledby="visit-label">
+                <div class="exact-inline"><input id="visitHours" name="visitHours" type="number" min="0.25" max="24" step="0.25" value="3"><span>hours</span></div>
+              </section>
 
-          <div class="optional-divider"><strong>Cost</strong><span>Leave these blank if money is not part of the decision.</span></div>
-          <label>Currency
-            <select id="currency" name="currency"><option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option><option>AUD</option><option>JPY</option><option>INR</option></select>
-          </label>
-          <label>Round-trip travel cost
-            <input id="transportCost" name="transportCost" type="number" min="0" step="1" value="" placeholder="Optional">
-          </label>
-          <label><span id="stay-cost-label">Food / activity cost</span>
-            <input id="stayOrActivityCost" name="stayOrActivityCost" type="number" min="0" step="1" value="" placeholder="Optional">
-          </label>
-          <label>Other costs
-            <input id="extraCosts" name="extraCosts" type="number" min="0" step="1" value="" placeholder="Optional">
-          </label>
-          <label>Maximum budget
-            <input id="totalBudget" name="totalBudget" type="number" min="1" step="1" value="" placeholder="Optional">
-          </label>
+              <section class="slider-field overnight-only" hidden aria-labelledby="nights-label">
+                <div class="slider-head"><label id="nights-label" for="nightsRange">Nights you planned to stay</label><output id="nights-output">5 nights</output></div>
+                <input id="nightsRange" class="range" type="range" min="1" max="30" step="1" value="5" aria-labelledby="nights-label">
+                <div class="exact-inline"><input id="nights" name="nights" type="number" min="1" max="60" step="1" value="5"><span>nights</span></div>
+              </section>
 
-          <div class="optional-divider overnight-only" hidden><strong>Recovery</strong><span>Only used for overnight travel.</span></div>
-          <label class="overnight-only" hidden>PTO days used
-            <input id="ptoDays" name="ptoDays" type="number" min="0" max="60" step="0.5" value="5">
-          </label>
-          <label class="overnight-only" hidden>Time-zone difference
-            <input id="timezoneDelta" name="timezoneDelta" type="number" min="0" max="18" step="0.5" value="8">
-          </label>
-        </div>
-      </details>
-    </form>
+              <div class="signal-grid">
+                <section class="slider-field"><div class="slider-head"><label for="excitement">How much do you want to go?</label><output id="excitement-output">7/10</output></div><input id="excitement" name="excitement" class="range" type="range" min="1" max="10" value="7"><div class="range-ends"><span>NOT REALLY</span><span>BADLY</span></div></section>
+                <section class="slider-field"><div class="slider-head"><label for="importance">How important is it?</label><output id="importance-output">3/5</output></div><input id="importance" name="importance" class="range" type="range" min="1" max="5" value="3"><div class="range-ends"><span>WHATEVER</span><span>MUST DO</span></div></section>
+                <section class="slider-field"><div class="slider-head"><label for="logisticsSlider">Travel hassle</label><output id="logistics-output">Normal</output></div><input id="logisticsSlider" class="range mapped-range" type="range" min="1" max="10" value="5" data-target="logistics"><div class="range-ends"><span>EASY</span><span>A PAIN</span></div><select id="logistics" name="logistics" class="engine-field" aria-hidden="true" tabindex="-1"><option value="easy">easy</option><option value="normal" selected>normal</option><option value="heavy">heavy</option></select></section>
+                <section class="slider-field"><div class="slider-head"><label for="coordinationSlider">People to coordinate</label><output id="coordination-output">Just me</output></div><input id="coordinationSlider" class="range mapped-range" type="range" min="1" max="10" value="1" data-target="coordination"><div class="range-ends"><span>JUST ME</span><span>WHOLE GROUP</span></div><select id="coordination" name="coordination" class="engine-field" aria-hidden="true" tabindex="-1"><option value="solo" selected>solo</option><option value="pair">pair</option><option value="group">group</option></select></section>
+                <section class="slider-field"><div class="slider-head"><label for="energySlider">Your energy</label><output id="energy-output">Normal</output></div><input id="energySlider" class="range mapped-range" type="range" min="1" max="10" value="5" data-target="energy"><div class="range-ends"><span>DRAINED</span><span>FULL TANK</span></div><select id="energy" name="energy" class="engine-field" aria-hidden="true" tabindex="-1"><option value="low">low</option><option value="normal" selected>normal</option><option value="high">high</option></select></section>
+                <section class="slider-field"><div class="slider-head"><label for="paceSlider">Ideal pace</label><output id="pace-output">Balanced</output></div><input id="paceSlider" class="range mapped-range" type="range" min="1" max="10" value="5" data-target="pace"><div class="range-ends"><span>PACKED</span><span>SLOW</span></div><select id="pace" name="pace" class="engine-field" aria-hidden="true" tabindex="-1"><option value="packed">packed</option><option value="balanced" selected>balanced</option><option value="relaxed">relaxed</option></select></section>
+              </div>
 
-    <aside class="card result">
-      <p class="result-place" id="destination-label">Your trip</p>
-      <h2 id="result-summary" aria-live="polite">For 20 minutes each way, give it about 3 hours.</h2>
-      <p class="result-copy" id="result-copy">You’ll spend 40 minutes traveling, so three hours there should feel worthwhile without taking over the day.</p>
+              <details class="money-details">
+                <summary>Include money <span>Optional</span></summary>
+                <div class="money-grid">
+                  <label>Currency<select id="currency" name="currency"><option>USD</option><option>EUR</option><option>GBP</option><option>CAD</option><option>AUD</option><option>JPY</option><option>INR</option></select></label>
+                  <label>Round-trip travel<input id="transportCost" name="transportCost" type="number" min="0" step="1" placeholder="0"></label>
+                  <label><span id="stay-cost-label">Food / activity</span><input id="stayOrActivityCost" name="stayOrActivityCost" type="number" min="0" step="1" placeholder="0"></label>
+                  <label>Other costs<input id="extraCosts" name="extraCosts" type="number" min="0" step="1" placeholder="0"></label>
+                  <label>Maximum budget<input id="totalBudget" name="totalBudget" type="number" min="1" step="1" placeholder="Optional"></label>
+                </div>
+              </details>
 
-      <details class="other-lengths" open>
-        <summary>Other good lengths</summary>
-        <div class="option-grid" id="stay-options"></div>
-        <p class="option-help">Tap one to use it as the stay you have in mind.</p>
-      </details>
+              <div class="overnight-only recovery-grid" hidden>
+                <label>PTO days used<input id="ptoDays" name="ptoDays" type="number" min="0" max="60" step="0.5" value="5"></label>
+                <label>Time-zone difference<input id="timezoneDelta" name="timezoneDelta" type="number" min="0" max="18" step="0.5" value="8"></label>
+              </div>
+            </div>
+          </details>
+        </form>
 
-      <details class="why" id="why-answer">
-        <summary>Why this amount?</summary>
-        <div id="breakdown" class="plain-breakdown"></div>
-        <p id="method-copy"></p>
-      </details>
+        <aside class="result-panel" aria-live="polite">
+          <div class="result-kicker"><span>03</span> RECOMMENDATION <i class="live-dot"></i> LIVE</div>
+          <p class="result-place" id="destination-label">YOUR TRIP</p>
+          <h2 id="result-summary">Go. Stay at least <em>3 hours.</em></h2>
+          <p class="result-copy" id="result-copy">That gives the travel enough payoff without taking over your day.</p>
 
-      <div class="actions"><button type="button" class="outline" id="share-result">Copy link</button><span id="share-status" class="status" role="status"></span></div>
-      <p class="disclaimer">This is a rule of thumb, not a promise that every trip will be worth it.</p>
-    </aside>
-  </section>
-</main>
-<script src="app.js"></script>
-<script>
-  const form = document.querySelector('#trip-form');
-  const TRAVEL_STOPS = [5,10,15,20,30,45,60,90,120,180,240,300,360,480,600,720,900,1080,1440,1800,2160];
-  const namedFields = [...form.elements].filter(el => el.name).map(el => el.name);
-  const q = selector => document.querySelector(selector);
-  const setText = (selector, text) => { q(selector).textContent = text; };
+          <div class="mini-route" aria-hidden="true">
+            <span class="mini-point"></span><span class="mini-line"><i id="route-progress"></i></span><span class="mini-point"></span>
+            <div><b id="round-trip-label">40 MIN TRAVEL</b><b id="destination-time-label">3 HR THERE</b></div>
+          </div>
 
-  function formatMinutes(minutes) {
-    if (minutes < 60) return `${minutes} min`;
-    const hours = minutes / 60;
-    return `${Number.isInteger(hours) ? hours : hours.toFixed(1)} hr`;
-  }
-  function currentTravelMinutes() {
-    const amount = Number(q('#oneWayAmount').value);
-    return q('#oneWayUnit').value === 'minutes' ? amount : amount * 60;
-  }
-  function nearestTravelIndex(minutes) {
-    return TRAVEL_STOPS.reduce((best, value, index) => Math.abs(value - minutes) < Math.abs(TRAVEL_STOPS[best] - minutes) ? index : best, 0);
-  }
-  function syncTravelFromRange() {
-    const minutes = TRAVEL_STOPS[Number(q('#travelTimeRange').value)];
-    if (minutes < 60) { q('#oneWayAmount').value = minutes; q('#oneWayUnit').value = 'minutes'; }
-    else { q('#oneWayAmount').value = minutes / 60; q('#oneWayUnit').value = 'hours'; }
-  }
-  function syncRangeFromTravel() { q('#travelTimeRange').value = nearestTravelIndex(currentTravelMinutes()); }
-  function syncStayRanges(source) {
-    if (source !== 'visitRange') q('#visitHoursRange').value = Math.min(16, Math.max(.5, Number(q('#visitHours').value) || 3));
-    if (source !== 'visitExact') q('#visitHours').value = q('#visitHoursRange').value;
-    if (source !== 'nightsRange') q('#nightsRange').value = Math.min(30, Math.max(1, Number(q('#nights').value) || 5));
-    if (source !== 'nightsExact') q('#nights').value = q('#nightsRange').value;
-  }
-  function updateControlLabels() {
-    const travelText = formatMinutes(currentTravelMinutes());
-    setText('#travel-time-output', travelText);
-    q('#travelTimeRange').setAttribute('aria-valuetext', travelText);
-    setText('#visit-output', `${Number(q('#visitHours').value)} hours`);
-    setText('#nights-output', `${Number(q('#nights').value)} nights`);
-    setText('#excitement-output', `${q('#excitement').value}/10`);
-    setText('#importance-output', `${q('#importance').value}/5`);
-  }
-  function hydrate() {
-    const params = new URLSearchParams(location.search);
-    namedFields.forEach(name => { if (params.has(name) && form.elements[name]) form.elements[name].value = params.get(name); });
-    syncRangeFromTravel(); syncStayRanges('hydrate');
-  }
-  function updateMode(type) {
-    document.querySelectorAll('.outing-only').forEach(el => el.hidden = type !== 'outing');
-    document.querySelectorAll('.overnight-only').forEach(el => el.hidden = type !== 'overnight');
-    q('#visitHours').disabled = type !== 'outing'; q('#activity').disabled = type !== 'outing';
-    q('#nights').disabled = type !== 'overnight'; q('#ptoDays').disabled = type !== 'overnight'; q('#timezoneDelta').disabled = type !== 'overnight';
-    setText('#stay-cost-label', type === 'outing' ? 'Food / activity cost' : 'Cost per night');
-  }
-  function rawValues() { return Object.fromEntries(new FormData(form).entries()); }
-  function updateUrl(raw) { const params = new URLSearchParams(); params.set('v','0.3'); Object.entries(raw).forEach(([k,v]) => params.set(k,v)); history.replaceState(null,'',`${location.pathname}?${params}`); }
-  function money(value, currency) { return new Intl.NumberFormat('en-US',{style:'currency',currency,maximumFractionDigits:0}).format(value); }
+          <div class="stay-options" id="stay-options"></div>
 
-  function render() {
-    const raw = rawValues(); updateMode(raw.tripType); updateControlLabels();
-    const r = TripWorth.calculateTripWorth(raw);
-    const errors = q('#validation-errors'); errors.hidden = r.valid; errors.textContent = r.valid ? '' : `Check these: ${r.validationErrors.join(' ')}`;
-    if (!r.valid) {
-      setText('#result-summary','Fix the highlighted numbers first.'); setText('#result-copy','Then the recommendation will update automatically.');
-      q('#stay-options').replaceChildren(); q('#breakdown').replaceChildren(); q('#share-result').disabled = true; return;
-    }
-    q('#share-result').disabled = false; updateUrl(raw);
-    const recommended = r.stayOptions[1];
-    const oneWay = formatMinutes(Math.round(r.oneWayHours * 60));
-    const roundTrip = formatMinutes(Math.round(r.roundTripHours * 60));
-    const hasDestination = r.destination !== 'Your trip';
-    setText('#destination-label', r.destination);
-    setText('#result-summary', hasDestination
-      ? `For ${oneWay} each way, give ${r.destination} about ${recommended.duration} ${r.stayUnit}.`
-      : `For ${oneWay} each way, plan on about ${recommended.duration} ${r.stayUnit} there.`);
-    setText('#result-copy', r.tripType === 'outing'
-      ? `You’ll spend ${roundTrip} traveling, so ${recommended.duration} ${r.stayUnit} there should feel worthwhile without taking over the day.`
-      : `That’s ${roundTrip} round trip, so ${recommended.duration} ${r.stayUnit} gives you time to arrive, recover, and enjoy the place.`);
-    q('#stay-options').replaceChildren(...r.stayOptions.map((option,index) => {
-      const button = document.createElement('button'); button.type='button'; button.className=`stay-option ${index===1?'featured':''}`;
-      const friendly = ['Quick','Good amount','Comfortable',r.tripType==='outing'?'Full day':'Longer trip'][index];
-      const descriptions = r.tripType === 'outing'
-        ? ['If you’re going for one thing.','The sensible middle.','Enough room not to rush.','Add food or another stop.']
-        : ['A compressed version.','The sensible middle.','Enough room to recover.','Room for a side trip.'];
-      button.innerHTML = `<span>${friendly}</span><strong>${option.duration} ${r.stayUnit}</strong><small>${descriptions[index]}</small>`;
-      button.addEventListener('click', () => {
-        if (r.tripType === 'outing') { q('#visitHours').value=option.duration; syncStayRanges('visitExact'); }
-        else { q('#nights').value=option.duration; syncStayRanges('nightsExact'); }
-        render();
-      });
-      return button;
-    }));
-    const mostRelevant = [...r.breakdown].sort((a,b) => a.value - b.value).slice(0,2);
-    q('#breakdown').replaceChildren(...mostRelevant.map(item => { const p=document.createElement('p'); p.textContent=item.explanation; return p; }));
-    setText('#method-copy', r.tripType === 'outing'
-      ? 'The estimate compares your time there with the round-trip drive, what you’re doing, and any extra hassle you added.'
-      : 'The estimate compares your usable days with the round-trip travel, recovery time, and any extra hassle you added.');
-  }
+          <details class="methodology" id="why-answer">
+            <summary><span>View the trip calculus</span><strong id="method-score">84</strong></summary>
+            <div class="methodology-body">
+              <div class="method-meta"><span>6 SIGNALS</span><span>WEIGHTED MODEL</span><span id="method-version">V0.2</span></div>
+              <div id="breakdown" class="factor-list"></div>
+              <p id="method-copy" class="method-copy"></p>
+            </div>
+          </details>
 
-  hydrate(); updateMode(rawValues().tripType);
-  q('#travelTimeRange').addEventListener('input', () => { syncTravelFromRange(); render(); });
-  q('#oneWayAmount').addEventListener('input', () => { syncRangeFromTravel(); render(); });
-  q('#oneWayUnit').addEventListener('input', () => { syncRangeFromTravel(); render(); });
-  q('#visitHoursRange').addEventListener('input', () => { syncStayRanges('visitRange'); render(); });
-  q('#visitHours').addEventListener('input', () => { syncStayRanges('visitExact'); render(); });
-  q('#nightsRange').addEventListener('input', () => { syncStayRanges('nightsRange'); render(); });
-  q('#nights').addEventListener('input', () => { syncStayRanges('nightsExact'); render(); });
+          <div class="result-actions">
+            <button type="button" class="share-button" id="share-result">COPY THIS TRIP ↗</button>
+            <span id="share-status" class="status" role="status"></span>
+          </div>
+          <p class="disclaimer">A decision aid, not a command. Your reason for going still matters most.</p>
+        </aside>
+      </section>
+    </main>
 
-  form.addEventListener('input', event => {
-    if (['travelTimeRange','oneWayAmount','oneWayUnit','visitHoursRange','visitHours','nightsRange','nights'].includes(event.target.id)) return;
-    render();
-  });
-  form.addEventListener('submit', event => event.preventDefault());
-  q('#share-result').addEventListener('click', async () => { try { await navigator.clipboard.writeText(location.href); setText('#share-status','Copied.'); } catch (_) { setText('#share-status','Link is in the address bar.'); } });
-  render();
-</script>
+    <footer><span>WORTH THE TRIP?</span><span>TIME IS THE REAL DISTANCE.</span></footer>
+  </div>
+  <script src="app.js"></script>
+  <script src="ui.js"></script>
 </body>
 </html>

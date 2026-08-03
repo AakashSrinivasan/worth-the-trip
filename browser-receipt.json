@@ -3,7 +3,7 @@
   "desktop": {
     "title": "Worth The Trip?",
     "type": "outing",
-    "summary": "For 20 min each way, plan on about 3 hours there.",
+    "summary": "Go. Stay at least 3 hours.",
     "options": [
       "2 hours",
       "3 hours",
@@ -14,7 +14,8 @@
     "travelOutput": "20 min",
     "travelAria": "20 min",
     "quickButtons": 0,
-    "dashboardPieces": 0,
+    "methodologyPresent": true,
+    "sliders": 9,
     "overflow": false,
     "errorsHidden": true,
     "urlVersion": true
@@ -24,15 +25,15 @@
       "output": "10 min",
       "amount": "10",
       "unit": "minutes",
-      "summary": "For 10 min each way, plan on about 2.5 hours there.",
-      "url": "?v=0.3&tripType=outing&destination=&purpose=leisure&activity=activity&oneWayAmount=10&oneWayUnit=minutes&visitHours=3&excitement=7&importance=3&logistics=normal&coordination=solo&energy=normal&pace=balanced&currency=USD&transportCost=&stayOrActivityCost=&extraCosts=&totalBudget="
+      "summary": "Go. Stay at least 2.5 hours.",
+      "url": "?v=0.4&tripType=outing&destination=&purpose=leisure&activity=activity&oneWayAmount=10&oneWayUnit=minutes&visitHours=3&excitement=7&importance=3&logistics=normal&coordination=solo&energy=normal&pace=balanced&currency=USD&transportCost=&stayOrActivityCost=&extraCosts=&totalBudget="
     },
     "tenHour": {
       "output": "10 hr",
       "amount": "10",
       "unit": "hours",
-      "summary": "For 10 hr each way, plan on about 12 hours there.",
-      "url": "?v=0.3&tripType=outing&destination=&purpose=leisure&activity=activity&oneWayAmount=10&oneWayUnit=hours&visitHours=3&excitement=7&importance=3&logistics=normal&coordination=solo&energy=normal&pace=balanced&currency=USD&transportCost=&stayOrActivityCost=&extraCosts=&totalBudget="
+      "summary": "Maybe skip it. Stay at least 12 hours.",
+      "url": "?v=0.4&tripType=outing&destination=&purpose=leisure&activity=activity&oneWayAmount=10&oneWayUnit=hours&visitHours=3&excitement=7&importance=3&logistics=normal&coordination=solo&energy=normal&pace=balanced&currency=USD&transportCost=&stayOrActivityCost=&extraCosts=&totalBudget="
     }
   },
   "optional": {
@@ -41,14 +42,14 @@
     "urlHasOptional": true
   },
   "hydration": {
-    "destination": "Foster City \u2192 Hillsborough",
+    "destination": "FOSTER CITY \u2192 HILLSBOROUGH",
     "exactAmount": "20",
     "exactUnit": "minutes",
     "sliderOutput": "20 min",
     "visitExact": "1.5",
     "visitSlider": "1.5",
     "purpose": "visiting",
-    "summary": "For 20 min each way, give Foster City \u2192 Hillsborough about 1.5 hours."
+    "summary": "Go. Stay at least 1.5 hours."
   },
   "longTrip": {
     "type": "overnight",
@@ -61,11 +62,11 @@
       "10 nights",
       "12 nights"
     ],
-    "summary": "For 10 hr each way, give Tokyo about 8 nights."
+    "summary": "Maybe skip it. Stay at least 8 nights."
   },
   "mobile": {
-    "destination": "Foster City \u2192 Hillsborough",
-    "summary": "For 20 min each way, give Foster City \u2192 Hillsborough about 1.5 hours.",
+    "destination": "FOSTER CITY \u2192 HILLSBOROUGH",
+    "summary": "Go. Stay at least 1.5 hours.",
     "overflow": false,
     "options": 4,
     "optionalOpen": false,
@@ -74,7 +75,7 @@
   },
   "invalid": {
     "hidden": false,
-    "summary": "Fix the highlighted numbers first.",
+    "summary": "Fix the numbers to continue.",
     "options": 0,
     "invalidShared": false
   },
